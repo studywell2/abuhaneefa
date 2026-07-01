@@ -7,7 +7,23 @@ if [ -z "$APP_KEY" ]; then
     echo "Generated APP_KEY for this session"
 fi
 
-# Configure Apache to listen on Render's PORT
+# Map Railway PostgreSQL variables to Laravel DB_* variables if needed
+if [ -n "$PGHOST" ] && [ -z "$DB_HOST" ]; then
+    export DB_HOST="$PGHOST"
+    export DB_PORT="${PGPORT:-5432}"
+    export DB_DATABASE="${PGDATABASE:-postgres}"
+    export DB_USERNAME="${PGUSER:-postgres}"
+    export DB_PASSWORD="$PGPASSWORD"
+    echo "Mapped Railway PostgreSQL variables to Laravel DB_* variables"
+fi
+
+# If DATABASE_URL is set (Railway/Heroku style), use it
+if [ -n "$DATABASE_URL" ] && [ -z "$DB_HOST" ]; then
+    export DB_CONNECTION="pgsql"
+    echo "Using DATABASE_URL for database connection"
+fi
+
+# Configure Apache to listen on the correct PORT
 PORT=${PORT:-80}
 sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
 sed -i "s/*:80/*:$PORT/" /etc/apache2/sites-available/000-default.conf
