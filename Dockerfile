@@ -44,6 +44,13 @@ COPY . .
 # Copy built frontend assets from the Node stage
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
+# Create storage directory structure
+RUN mkdir -p storage/framework/sessions \
+    storage/framework/views \
+    storage/framework/cache \
+    storage/logs \
+    bootstrap/cache
+
 # Set storage permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache

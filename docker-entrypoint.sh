@@ -1,46 +1,54 @@
 #!/bin/bash
-set -e
+# Don't use set -e so one failed command doesn't kill the container
 
-# Generate APP_KEY if not set via environment
+echo "=== Starting Abu Aneefah Islamic Academy ==="
+
+# Generate APP_KEY if not set
 if [ -z "$APP_KEY" ]; then
     export APP_KEY=$(php -r "echo 'base64:'.base64_encode(random_bytes(32));")
-    echo "Generated APP_KEY for this session"
+    echo "Generated APP_KEY"
 fi
 
-# Map Railway PostgreSQL variables to Laravel DB_* variables if needed
-if [ -n "$PGHOST" ] && [ -z "$DB_HOST" ]; then
-    export DB_HOST="$PGHOST"
-    export DB_PORT="${PGPORT:-5432}"
-    export DB_DATABASE="${PGDATABASE:-postgres}"
-    export DB_USERNAME="${PGUSER:-postgres}"
-    export DB_PASSWORD="$PGPASSWORD"
-    echo "Mapped Railway PostgreSQL variables to Laravel DB_* variables"
-fi
-
-# If DATABASE_URL is set, use it
-if [ -n "$DATABASE_URL" ] && [ -z "$DB_HOST" ]; then
-    export DB_CONNECTION="pgsql"
-    echo "Using DATABASE_URL for database connection"
-fi
-
-# Configure Apache to listen on the correct PORT
+# Configure Apache to listen on the correct PORT (Render provides this)
 PORT=${PORT:-80}
-sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
-sed -i "s/*:80/*:$PORT/" /etc/apache2/sites-available/000-default.conf
+echo "Using PORT: $PORT"
 
-# Run database migrations (skip if no DB configured, fall back to SQLite)
-if [ -n "$DB_HOST" ] || [ -n "$DATABASE_URL" ]; then
-    php artisan migrate --force || echo "WARNING: Migration failed, continuing anyway"
-else
-    echo "No external DB configured, using SQLite"
+if [ -f /etc/apache2/ports.conf ]; then
+    sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf
+    sed -i "s/Listen .*$/Listen $PORT/g" /etc/apache2/ports.conf
+fi
+
+sed -i "s/*:80/*:$PORT/g" /etc/apache2/sites-available/000-default.conf
+sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/sites-available/000-default.conf 2>/dev/null
+
+# Create storage directory structure if missing
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/framework/cache
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
+
+# Use SQLite if no external database configured
+if [ -z "$DB_HOST" ] && [ -z "$DATABASE_URL" ]; then
+    echo "No external DB configured — using SQLite"
     export DB_CONNECTION="sqlite"
     touch database/database.sqlite
-    php artisan migrate --force || echo "WARNING: Migration failed, continuing anyway"
+    chmod 666 database/database.sqlite
 fi
 
-# Ensure storage permissions at runtime
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+# Run migrations
+echo "Running migrations..."
+php artisan migrate --force 2>&1 || echo "WARNING: Migration failed, continuing anyway"
 
-# Start Apache
+# Ensure permissions
+echo "Setting permissions..."
+chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null
+chmod -R 775 storage bootstrap/cache database 2>/dev/null
+
+# Clear cached config
+php artisan config:clear 2>/dev/null
+php artisan route:clear 2>/dev/null
+php artisan view:clear 2>/dev/null
+
+echo "=== Starting Apache ==="
 exec "$@"
