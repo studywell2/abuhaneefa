@@ -35,11 +35,15 @@ COPY apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 WORKDIR /var/www/html
 
 # Install PHP dependencies (cached unless composer.lock changes)
+# --no-scripts: skip artisan commands that need the full app code
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Copy application code
 COPY . .
+
+# Run composer post-install scripts now that artisan is available
+RUN composer dump-autoload --optimize --no-interaction
 
 # Copy built frontend assets from the Node stage
 COPY --from=frontend /app/public/build /var/www/html/public/build
