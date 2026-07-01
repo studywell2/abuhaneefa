@@ -17,7 +17,7 @@ if [ -n "$PGHOST" ] && [ -z "$DB_HOST" ]; then
     echo "Mapped Railway PostgreSQL variables to Laravel DB_* variables"
 fi
 
-# If DATABASE_URL is set (Railway/Heroku style), use it
+# If DATABASE_URL is set, use it
 if [ -n "$DATABASE_URL" ] && [ -z "$DB_HOST" ]; then
     export DB_CONNECTION="pgsql"
     echo "Using DATABASE_URL for database connection"
@@ -28,8 +28,15 @@ PORT=${PORT:-80}
 sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
 sed -i "s/*:80/*:$PORT/" /etc/apache2/sites-available/000-default.conf
 
-# Run database migrations
-php artisan migrate --force
+# Run database migrations (skip if no DB configured, fall back to SQLite)
+if [ -n "$DB_HOST" ] || [ -n "$DATABASE_URL" ]; then
+    php artisan migrate --force || echo "WARNING: Migration failed, continuing anyway"
+else
+    echo "No external DB configured, using SQLite"
+    export DB_CONNECTION="sqlite"
+    touch database/database.sqlite
+    php artisan migrate --force || echo "WARNING: Migration failed, continuing anyway"
+fi
 
 # Ensure storage permissions at runtime
 chown -R www-data:www-data storage bootstrap/cache
