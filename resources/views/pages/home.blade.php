@@ -3,6 +3,22 @@
 @section('title', 'Abu Haneefah Islamic Academy | Home')
 
 @section('content')
+<!-- Preloader -->
+<div id="preloader" class="preloader">
+    <div class="preloader-icon-wrapper">
+        <div class="preloader-ring"></div>
+        <div class="preloader-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C10 3.5 9 5 9 7c0 2 1.5 3 3 3s3-1 3-3c0-2-1-3.5-3-5z"/>
+                <path d="M4 22V11l8-4 8 4v11"/>
+                <path d="M9 22v-4a3 3 0 016 0v4"/>
+                <path d="M2 22h2M20 22h2"/>
+            </svg>
+        </div>
+    </div>
+    <p class="preloader-text">Abu Haneefah Islamic Academy</p>
+</div>
+
 <!-- ==================== HERO SECTION ==================== -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Background Image -->
@@ -506,4 +522,17 @@
         </div>
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+    window.addEventListener('load', function () {
+        var preloader = document.getElementById('preloader');
+        if (preloader) {
+            setTimeout(function () {
+                preloader.classList.add('hidden');
+            }, 500);
+        }
+    });
+</script>
 @endsection
