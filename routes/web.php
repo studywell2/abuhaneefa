@@ -13,6 +13,7 @@ Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::view('/contact-print', 'pages.contact-print')->name('contact.print');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');

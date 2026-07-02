@@ -25,7 +25,7 @@
                 </span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">A Legacy of Islamic Excellence</h2>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Abu Aneefah Islamic Academy was founded with a clear vision: to provide an educational environment
+                    Abu Haneefah Islamic Academy was founded with a clear vision: to provide an educational environment
                     where students develop both spiritually and academically. For over 15 years, we have been
                     dedicated to nurturing young minds through a curriculum that seamlessly integrates the teachings
                     of the Qur'an and Sunnah with modern educational standards.

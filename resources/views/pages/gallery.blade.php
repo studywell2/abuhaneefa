@@ -7,7 +7,7 @@
 <section class="pt-20 bg-primary-700 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-4xl sm:text-5xl font-bold mb-4">Gallery</h1>
-        <p class="text-primary-200 max-w-2xl mx-auto">A glimpse into life at Abu Aneefah Islamic Academy.</p>
+        <p class="text-primary-200 max-w-2xl mx-auto">A glimpse into life at Abu Haneefah Islamic Academy.</p>
     </div>
 </section>
 

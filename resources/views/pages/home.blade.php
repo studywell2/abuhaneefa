@@ -55,7 +55,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Image -->
             <div class="reveal relative">
-                <img src="{{ asset('images/students-group.jpg') }}" alt="Students of Abu Aneefah Islamic Academy"
+                <img src="{{ asset('images/students-group.jpg') }}" alt="Students of Abu Haneefah Islamic Academy"
                      class="rounded-3xl shadow-2xl w-full object-cover">
                 <div class="absolute -bottom-6 -right-6 bg-primary-600 text-white rounded-2xl p-6 shadow-xl hidden sm:block">
                     <p class="text-3xl font-bold">15+</p>
@@ -71,7 +71,7 @@
                     Building Faith, Knowledge &amp; Character for a Better Ummah
                 </h2>
                 <p class="text-gray-600 leading-relaxed mb-5">
-                    Abu Aneefah Islamic Academy is a distinguished educational institution committed to
+                    Abu Haneefah Islamic Academy is a distinguished educational institution committed to
                     providing quality Islamic and contemporary education rooted in the Qur'an and Sunnah.
                     We strive to develop well-rounded individuals who excel spiritually, intellectually,
                     and socially.
@@ -408,7 +408,7 @@
             @php
                 $testimonials = [
                     ['name' => 'Aisha Mohammed', 'role' => 'Parent', 'text' => 'My children have grown tremendously in both character and knowledge. The teachers truly care about each student\'s spiritual and academic growth.'],
-                    ['name' => 'Ibrahim Adeyemi', 'role' => 'Parent', 'text' => 'The integration of Qur\'anic studies with modern education is exactly what we wanted. Abu Aneefah has exceeded our expectations in every way.'],
+                    ['name' => 'Ibrahim Adeyemi', 'role' => 'Parent', 'text' => 'The integration of Qur\'anic studies with modern education is exactly what we wanted. Abu Haneefah has exceeded our expectations in every way.'],
                     ['name' => 'Fatima Olatunji', 'role' => 'Parent', 'text' => 'The environment is nurturing and safe. My daughter has memorized several Ajza of the Qur\'an while maintaining excellent academic performance.'],
                 ];
             @endphp

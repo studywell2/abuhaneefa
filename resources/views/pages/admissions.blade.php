@@ -34,7 +34,7 @@
 <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <x-section-header title="Admission Process" subtitle="Simple Steps to Enroll">
-            Follow these easy steps to secure your child's place at Abu Aneefah Islamic Academy.
+            Follow these easy steps to secure your child's place at Abu Haneefah Islamic Academy.
         </x-section-header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
@@ -43,7 +43,7 @@
                     ['step' => '01', 'title' => 'Inquiry', 'desc' => 'Contact us via phone, email, or visit our campus to express your interest.'],
                     ['step' => '02', 'title' => 'Application', 'desc' => 'Fill out the admission form and submit the required documents.'],
                     ['step' => '03', 'title' => 'Assessment', 'desc' => 'Your child will undergo a brief assessment to determine the appropriate level.'],
-                    ['step' => '04', 'title' => 'Enrollment', 'desc' => 'Complete the enrollment process and welcome to the Abu Aneefah family!'],
+                    ['step' => '04', 'title' => 'Enrollment', 'desc' => 'Complete the enrollment process and welcome to the Abu Haneefah family!'],
                 ];
             @endphp
 

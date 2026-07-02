@@ -21,7 +21,7 @@
                 </span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Integrated Curriculum</h2>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    At Abu Aneefah Islamic Academy, we believe that the best education is one that harmonizes
+                    At Abu Haneefah Islamic Academy, we believe that the best education is one that harmonizes
                     spiritual growth with academic excellence. Our curriculum is carefully designed to integrate
                     the teachings of the Qur'an and Sunnah with modern educational standards.
                 </p>
