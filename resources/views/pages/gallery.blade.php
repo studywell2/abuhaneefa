@@ -7,7 +7,12 @@
 <section class="pt-20 bg-primary-700 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-4xl sm:text-5xl font-bold mb-4">Gallery</h1>
-        <p class="text-primary-200 max-w-2xl mx-auto">A glimpse into life at Abu Haneefah Islamic Academy.</p>
+        <p class="text-primary-200 max-w-2xl mx-auto">
+            A glimpse into life at Abu Haneefah Islamic Academy.
+            @if (count($images) > 0)
+                <span class="inline-block ml-2 px-3 py-0.5 rounded-full bg-white/15 text-sm font-medium">{{ count($images) }} photos</span>
+            @endif
+        </p>
     </div>
 </section>
 
@@ -15,10 +20,18 @@
 <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if (count($images) > 0)
-            <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <button class="gallery-filter px-5 py-2 rounded-full bg-primary-600 text-white text-sm font-medium transition-colors" data-filter="all">All</button>
+                @foreach ($categories as $category)
+                    <button class="gallery-filter px-5 py-2 rounded-full bg-white text-gray-600 text-sm font-medium border border-gray-200 hover:border-primary-400 hover:text-primary-600 transition-colors" data-filter="{{ $category }}">{{ $category }}</button>
+                @endforeach
+            </div>
+
+            <div id="gallery-grid" class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
                 @foreach ($images as $image)
-                    <a href="#" data-lightbox="{{ asset($image['src']) }}" data-alt="{{ $image['alt'] }}"
-                       class="reveal group relative block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 break-inside-avoid">
+                    <a href="#" data-lightbox="{{ asset($image['src']) }}" data-alt="{{ $image['alt'] }}" data-category="{{ $image['category'] }}"
+                       class="gallery-item reveal group relative block overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 break-inside-avoid">
                         <img src="{{ asset($image['src']) }}" alt="{{ $image['alt'] }}" loading="lazy"
                              class="w-full object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-primary-900/0 group-hover:bg-primary-900/50 transition-all duration-300 flex items-center justify-center">
@@ -56,4 +69,34 @@
         </a>
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var filterButtons = document.querySelectorAll('.gallery-filter');
+        var galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var filter = btn.getAttribute('data-filter');
+
+                filterButtons.forEach(function (b) {
+                    b.classList.remove('bg-primary-600', 'text-white');
+                    b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+                });
+                btn.classList.add('bg-primary-600', 'text-white');
+                btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+
+                galleryItems.forEach(function (item) {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

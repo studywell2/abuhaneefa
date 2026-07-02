@@ -531,7 +531,7 @@
         if (preloader) {
             setTimeout(function () {
                 preloader.classList.add('hidden');
-            }, 30000);
+            }, 600000);
         }
     });
 </script>

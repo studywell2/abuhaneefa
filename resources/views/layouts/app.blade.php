@@ -28,7 +28,10 @@
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox-overlay">
         <span id="lightbox-close" class="lightbox-close">&times;</span>
+        <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous">&lsaquo;</button>
         <img id="lightbox-img" src="" alt="">
+        <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next">&rsaquo;</button>
+        <span id="lightbox-counter" class="lightbox-counter"></span>
     </div>
 
     @yield('scripts')
