@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Admissions | Abu Aneefah Islamic Academy')
+@section('title', 'Admissions | Abu Haneefah Islamic Academy')
 
 @section('content')
 <!-- Page Header -->

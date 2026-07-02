@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Abu Aneefah Islamic Academy')</title>
-    <meta name="description" content="Abu Aneefah Islamic Academy - Providing quality Islamic and contemporary education rooted in Qur'an and Sunnah. Building faith, knowledge, and character for a better Ummah.">
+    <title>@yield('title', 'Abu Haneefah Islamic Academy')</title>
+    <meta name="description" content="Abu Haneefah Islamic Academy - Providing quality Islamic and contemporary education rooted in Qur'an and Sunnah. Building faith, knowledge, and character for a better Ummah.">
     <link rel="icon" href="{{ asset('images/logo.jpg') }}" type="image/jpeg">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

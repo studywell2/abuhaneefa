@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Abu Aneefah Islamic Academy | Home')
+@section('title', 'Abu Haneefah Islamic Academy | Home')
 
 @section('content')
 <!-- ==================== HERO SECTION ==================== -->
@@ -18,7 +18,7 @@
             بسم الله الرحمن الرحيم
         </span>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 animate-[fade-in-up_0.8s_ease-out]">
-            Abu Aneefah
+            Abu Haneefah
             <span class="block text-primary-300">Islamic Academy</span>
         </h1>
         <p class="text-lg sm:text-xl text-primary-100 leading-relaxed mb-10 max-w-2xl mx-auto animate-[fade-in-up_1s_ease-out]">

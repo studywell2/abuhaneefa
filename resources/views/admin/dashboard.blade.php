@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Abu Aneefah Islamic Academy</title>
+    <title>Admin Dashboard | Abu Haneefah Islamic Academy</title>
     <link rel="icon" href="{{ asset('images/logo.jpg') }}" type="image/jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-10 w-10 rounded-full object-cover ring-2 ring-primary-400">
                     <div>
-                        <h1 class="font-bold text-sm sm:text-base">Abu Aneefah Admin</h1>
+                        <h1 class="font-bold text-sm sm:text-base">Abu Haneefah Admin</h1>
                         <p class="text-xs text-primary-300">Messages Dashboard</p>
                     </div>
                 </div>

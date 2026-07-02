@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'About Us | Abu Aneefah Islamic Academy')
+@section('title', 'About Us | Abu Haneefah Islamic Academy')
 
 @section('content')
 <!-- Page Header -->
@@ -16,7 +16,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="reveal">
-                <img src="{{ asset('images/students-girls.jpg') }}" alt="Students of Abu Aneefah"
+                <img src="{{ asset('images/students-girls.jpg') }}" alt="Students of Abu Haneefah"
                      class="rounded-3xl shadow-2xl w-full object-cover">
             </div>
             <div class="reveal">
@@ -49,7 +49,7 @@
 <section class="py-24 bg-primary-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <x-section-header title="Our Core Values" subtitle="What We Stand For">
-            The principles that guide everything we do at Abu Aneefah Islamic Academy.
+            The principles that guide everything we do at Abu Haneefah Islamic Academy.
         </x-section-header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">

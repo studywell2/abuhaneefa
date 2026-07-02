@@ -17,10 +17,10 @@
         <div class="flex items-center justify-between h-20">
             <!-- Logo -->
             <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Abu Aneefah Islamic Academy Logo"
+                <img src="{{ asset('images/logo.jpg') }}" alt="Abu Haneefah Islamic Academy Logo"
                      class="h-12 w-12 rounded-full object-cover ring-2 ring-primary-500 ring-offset-2">
                 <span class="font-bold text-lg leading-tight {{ $isHome ? 'text-white' : 'text-primary-600' }}">
-                    Abu Aneefah
+                    Abu Haneefah
                     <span class="block text-xs font-medium {{ $isHome ? 'text-primary-100' : 'text-gray-500' }}">Islamic Academy</span>
                 </span>
             </a>
