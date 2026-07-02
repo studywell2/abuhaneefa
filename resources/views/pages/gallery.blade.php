@@ -6,6 +6,14 @@
 <!-- Page Header -->
 <section class="pt-20 bg-primary-700 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center justify-center gap-2 text-sm text-primary-200 mb-6">
+            <a href="{{ route('home') }}" class="hover:text-white transition-colors">Home</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="text-white font-medium">Gallery</span>
+        </nav>
         <h1 class="text-4xl sm:text-5xl font-bold mb-4">Gallery</h1>
         <p class="text-primary-200 max-w-2xl mx-auto">
             A glimpse into life at Abu Haneefah Islamic Academy.
@@ -13,6 +21,28 @@
                 <span class="inline-block ml-2 px-3 py-0.5 rounded-full bg-white/15 text-sm font-medium">{{ count($images) }} photos</span>
             @endif
         </p>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="bg-primary-800 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            @php
+                $stats = [
+                    ['value' => '500+', 'label' => 'Students'],
+                    ['value' => '15+', 'label' => 'Years of Excellence'],
+                    ['value' => '20+', 'label' => 'Qualified Teachers'],
+                    ['value' => '6', 'label' => 'Programs Offered'],
+                ];
+            @endphp
+            @foreach ($stats as $stat)
+                <div class="reveal">
+                    <p class="text-3xl sm:text-4xl font-bold text-primary-300">{{ $stat['value'] }}</p>
+                    <p class="text-sm text-primary-100 mt-1">{{ $stat['label'] }}</p>
+                </div>
+            @endforeach
+        </div>
     </div>
 </section>
 
@@ -98,5 +128,28 @@
             });
         });
     });
+</script>
+
+<!-- Back to Top -->
+<button id="back-to-top" class="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 transition-all duration-300 opacity-0 pointer-events-none translate-y-4 flex items-center justify-center" aria-label="Back to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+    </svg>
+</button>
+
+<script>
+    var backToTop = document.getElementById('back-to-top');
+    if (backToTop) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 400) {
+                backToTop.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            } else {
+                backToTop.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            }
+        });
+        backToTop.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 </script>
 @endsection
