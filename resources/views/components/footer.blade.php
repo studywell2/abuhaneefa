@@ -7,7 +7,7 @@
                     <img src="{{ asset('images/logo.jpg') }}" alt="Logo"
                          class="h-14 w-14 rounded-full object-cover ring-2 ring-primary-400 ring-offset-2 ring-offset-primary-800">
                     <div>
-                        <h3 class="font-bold text-lg leading-tight">Abu Aneefah</h3>
+                        <h3 class="font-bold text-lg leading-tight">Abu Haneefah</h3>
                         <p class="text-sm text-primary-200">Islamic Academy</p>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
     <div class="border-t border-primary-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
             <p class="text-center text-sm text-primary-300">
-                &copy; {{ date('Y') }} Abu Aneefah Islamic Academy. All rights reserved.
+                &copy; {{ date('Y') }} Abu Haneefah Islamic Academy. All rights reserved.
             </p>
         </div>
     </div>
