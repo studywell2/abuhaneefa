@@ -65,6 +65,42 @@
     </div>
 </section>
 
+<!-- ==================== ADMISSIONS PROMO BANNER ==================== -->
+<section class="relative bg-gradient-to-r from-primary-600 to-primary-700 overflow-hidden">
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-10"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left">
+                <div class="flex items-center gap-3 justify-center lg:justify-start mb-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-500 text-white text-xs font-bold uppercase tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                        Admissions Open
+                    </span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-white">
+                    Admissions in Progress — 2026/2027 Academic Session
+                </h3>
+                <p class="text-primary-100 text-sm mt-1">
+                    Entrance examinations: 15th, 20th &amp; 27th March 2026
+                </p>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <a href="{{ route('admissions') }}"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-primary-700 font-semibold hover:bg-primary-50 transition-all duration-300 shadow-lg">
+                    Register Online
+                </a>
+                <a href="{{ route('admissions') }}"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-800 text-white font-semibold hover:bg-primary-900 transition-all duration-300 border border-primary-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download Form
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ==================== ABOUT SECTION ==================== -->
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -134,6 +170,63 @@
                 </div>
                 <a href="{{ route('about') }}" class="inline-flex items-center gap-2 mt-8 text-primary-600 font-semibold hover:gap-3 transition-all">
                     Learn More About Us
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== WELCOME ADDRESS ==================== -->
+<section class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-72 h-72 bg-primary-50 rounded-full blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
+            <!-- Photo -->
+            <div class="reveal lg:col-span-2 flex justify-center">
+                <div class="relative">
+                    <div class="absolute -inset-3 bg-primary-100 rounded-full"></div>
+                    <div class="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                        <img src="{{ asset('images/students-group.jpg') }}" alt="Head of School"
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 bg-primary-600 text-white rounded-2xl px-5 py-3 shadow-xl text-center">
+                        <p class="text-sm font-semibold">Head of School</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <div class="reveal lg:col-span-3">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-primary-50 text-primary-600 text-sm font-semibold mb-4">
+                    Welcome Address
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                    A Warm Welcome to Abu Haneefah
+                </h2>
+                <div class="space-y-4 text-gray-600 leading-relaxed">
+                    <p>
+                        Bismillah ir-Rahman ir-Rahim. Welcome to Abu Haneefah Islamic Academy, where we
+                        have been nurturing young minds and hearts since 2010 with one mission — to
+                        produce the total child through a holistic education programme rooted in the
+                        Qur'an and Sunnah.
+                    </p>
+                    <p>
+                        Our aim is to be widely acclaimed as an institution that trains and turns out
+                        students who have been adequately prepared for tertiary education and life,
+                        combining strong faith with academic excellence. We invite you to partner with
+                        us in this noble journey of shaping the future of our Ummah.
+                    </p>
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h4 class="font-bold text-gray-900 text-lg">Ustadh Abu Haneefah</h4>
+                    <p class="text-primary-600 text-sm font-medium">Founder &amp; Head of School</p>
+                </div>
+                <a href="{{ route('about') }}" class="inline-flex items-center gap-2 mt-5 text-primary-600 font-semibold hover:gap-3 transition-all">
+                    Read Full Welcome Address
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
@@ -413,6 +506,93 @@
     </div>
 </section>
 
+<!-- ==================== UPCOMING EVENTS ==================== -->
+<section class="py-24 bg-primary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <x-section-header title="Upcoming Events" subtitle="What's Happening at Our Academy">
+            Stay informed about important dates, events, and activities at Abu Haneefah Islamic Academy.
+        </x-section-header>
+
+        <div class="mt-16 max-w-2xl mx-auto">
+            @php
+                $events = [
+                    [
+                        'title' => 'Entrance Examination',
+                        'desc' => 'Entrance examinations for the 2026/2027 Academic Session for all prospective students.',
+                        'category' => 'Admissions',
+                    ],
+                    [
+                        'title' => 'Inter-House Sports Competition',
+                        'desc' => 'Annual sports day featuring athletics, football, relay races, and cultural displays across all houses.',
+                        'category' => 'Sports',
+                    ],
+                    [
+                        'title' => 'Qur\'an Memorization Competition',
+                        'desc' => 'Annual Hifz competition where students showcase their Qur\'an memorization with proper Tajweed.',
+                        'category' => 'Academics',
+                    ],
+                ];
+            @endphp
+
+            @foreach ($events as $event)
+                <div class="reveal group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 border border-primary-100 hover:-translate-y-1 mb-6">
+                    <span class="inline-block px-3 py-1 rounded-full bg-primary-100 text-primary-700 text-xs font-semibold mb-4">
+                        {{ $event['category'] }}
+                    </span>
+                    <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                        {{ $event['title'] }}
+                    </h4>
+                    <p class="text-gray-600 leading-relaxed">{{ $event['desc'] }}</p>
+                </div>
+            @endforeach
+
+            <div class="text-center mt-8 reveal">
+                <p class="text-gray-500 text-sm mb-4">Dates and times will be announced.</p>
+                <a href="{{ route('contact.create') }}"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all duration-300 shadow-lg">
+                    Contact Us for Details
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ACADEMIC CALENDAR DOWNLOAD ==================== -->
+<section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 to-primary-900 shadow-2xl">
+            <!-- Decorative Pattern -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-gold-500/10 rounded-full blur-3xl"></div>
+
+            <div class="relative flex flex-col sm:flex-row items-center justify-between gap-6 p-8 sm:p-10">
+                <div class="text-center sm:text-left">
+                    <div class="flex items-center gap-2 justify-center sm:justify-start mb-3">
+                        <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span class="text-gold-400 font-semibold text-sm uppercase tracking-wide">Academic Calendar</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Download the 2025/2026 Academic Calendar</h3>
+                    <p class="text-primary-200 text-sm max-w-lg">
+                        Get all term dates, exam schedules, and event information for the current academic session.
+                    </p>
+                </div>
+                <a href="{{ route('admissions') }}"
+                   class="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white text-primary-700 font-semibold hover:bg-primary-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 whitespace-nowrap">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ==================== TESTIMONIALS ==================== -->
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -490,6 +670,37 @@
         </div>
     </div>
 </section>
+
+<!-- ==================== NEWSLETTER ==================== -->
+<section class="py-20 bg-primary-900">
+    <div class="max-w-xl mx-auto px-6 text-center reveal">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">
+            Subscribe to Our Newsletter
+        </h2>
+        <p class="text-primary-200 leading-relaxed mb-8">
+            Receive news, events, and updates from Abu Haneefah Islamic Academy directly in your inbox.
+        </p>
+        <form action="{{ route('newsletter.store') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
+            @csrf
+            <input
+                type="email"
+                name="email"
+                required
+                placeholder="Enter your email address"
+                class="w-full sm:flex-1 rounded-full bg-white/10 border border-primary-600 px-6 py-4 text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition-all">
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold-500 hover:bg-gold-400 text-primary-950 font-bold transition-all duration-300 shadow-lg whitespace-nowrap">
+                Subscribe
+            </button>
+        </form>
+        @if(session('newsletter_success'))
+            <p class="text-green-400 text-sm mt-4 font-medium">{{ session('newsletter_success') }}</p>
+        @endif
+        <p class="text-primary-400 text-sm mt-5">No spam. Unsubscribe anytime.</p>
+    </div>
+</section>
+
 
 <!-- ==================== CALL TO ACTION ==================== -->
 <section class="relative py-24 overflow-hidden">
