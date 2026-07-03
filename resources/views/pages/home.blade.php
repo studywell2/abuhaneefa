@@ -224,7 +224,7 @@
 <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <x-section-header title="Why Choose Our School" subtitle="Excellence in Every Aspect">
-            Discover what makes Abu Aneefah Islamic Academy the right choice for your child's education.
+            Discover what makes Abu Haneefah Islamic Academy the right choice for your child's education.
         </x-section-header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
