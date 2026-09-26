@@ -1,0 +1,100 @@
+name: Deploy Laravel Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, sqlite3, pdo_sqlite
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Prepare Laravel deployment package
+        run: |
+          mkdir -p deploy/laravel-app
+          mkdir -p deploy/public_html
+
+          cp -a app deploy/laravel-app/
+          cp -a bootstrap deploy/laravel-app/
+          cp -a config deploy/laravel-app/
+          cp -a database deploy/laravel-app/
+          cp -a resources deploy/laravel-app/
+          cp -a routes deploy/laravel-app/
+          cp -a tests deploy/laravel-app/
+          cp -a vendor deploy/laravel-app/
+          cp -a artisan deploy/laravel-app/
+          cp -a composer.json deploy/laravel-app/
+          cp -a composer.lock deploy/laravel-app/
+
+          rm -rf deploy/laravel-app/database/database.sqlite
+          rm -rf deploy/laravel-app/storage
+
+          cp -a public/. deploy/public_html/
+
+          rm -f deploy/public_html/index.php
+          rm -rf deploy/public_html/storage
+
+      - name: Deploy Laravel application
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          security: loose
+          local-dir: ./deploy/laravel-app/
+          server-dir: domains/abuhaneefah.com.ng/laravel-app/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.env
+            **/database/database.sqlite
+            **/storage/**
+            **/bootstrap/cache/**
+
+      - name: Deploy public files
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          security: loose
+          local-dir: ./deploy/public_html/
+          server-dir: domains/abuhaneefah.com.ng/public_html/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            index.php
+            storage/**
