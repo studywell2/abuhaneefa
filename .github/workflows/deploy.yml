@@ -79,7 +79,6 @@ jobs:
             **/.env
             **/database/database.sqlite
             **/storage/**
-            **/bootstrap/cache/**
 
       - name: Deploy public files
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
