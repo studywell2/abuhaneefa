@@ -729,7 +729,9 @@
                     Examiners
                 </a>
 
-                <a href="#exams" class="nav-link">
+                <!-- CONNECTED EXAMINATION LINK -->
+
+                <a href="{{ route('cbt.admin.examinations.index') }}" class="nav-link">
                     <span class="nav-icon">▤</span>
                     Examinations
                 </a>
@@ -874,8 +876,8 @@
                                     to examination records.
                                 </p>
 
-                                <a href="#results" class="slide-link">
-                                    Explore Dashboard →
+                                <a href="{{ route('cbt.admin.examinations.index') }}" class="slide-link">
+                                    Examination Management →
                                 </a>
                             </div>
 
@@ -945,7 +947,7 @@
 
                         <h3>—</h3>
                         <p>Examinations</p>
-                        <small>Examination module not connected</small>
+                        <small>Examination module statistics pending</small>
                     </div>
 
 
@@ -1012,7 +1014,9 @@
                     </a>
 
 
-                    <a href="#exams" class="management-card">
+                    <!-- CONNECTED EXAMINATION MANAGEMENT CARD -->
+
+                    <a href="{{ route('cbt.admin.examinations.index') }}" class="management-card">
 
                         <div class="management-icon">▤</div>
 
@@ -1024,7 +1028,7 @@
                         </p>
 
                         <div class="management-footer">
-                            <span class="status">Planned</span>
+                            <span class="status available">Available</span>
                             <span class="arrow">→</span>
                         </div>
 
