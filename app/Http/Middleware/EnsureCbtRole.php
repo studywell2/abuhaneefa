@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureCbtRole
@@ -14,6 +14,19 @@ class EnsureCbtRole
 
         if (! $user) {
             return redirect()->route('cbt.login');
+        }
+
+        if (! $user->is_active) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()
+                ->route('cbt.login')
+                ->withErrors([
+                    'identifier' => 'Your account is inactive. Please contact the school administrator.',
+                ]);
         }
 
         if (! in_array($user->role, $roles, true)) {

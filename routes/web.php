@@ -6,6 +6,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Cbt\AuthController as CbtAuthController;
 use App\Http\Controllers\Cbt\Admin\StudentController;
+use App\Http\Controllers\Cbt\Admin\ExaminerController;
 use Illuminate\Support\Facades\Route;
 
 // Public academy website
@@ -53,14 +54,62 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
             Route::view('/admin/dashboard', 'cbt.admin.dashboard')
                 ->name('admin.dashboard');
 
+            // Examiner Management
+            Route::get('/admin/examiners', [ExaminerController::class, 'index'])
+                ->name('admin.examiners.index');
+
+            Route::get('/admin/examiners/create', [ExaminerController::class, 'create'])
+                ->name('admin.examiners.create');
+
+            Route::post('/admin/examiners', [ExaminerController::class, 'store'])
+                ->name('admin.examiners.store');
+
+            Route::get('/admin/examiners/{examiner}', [ExaminerController::class, 'show'])
+                ->name('admin.examiners.show');
+
+            Route::get('/admin/examiners/{examiner}/edit', [ExaminerController::class, 'edit'])
+                ->name('admin.examiners.edit');
+
+            Route::put('/admin/examiners/{examiner}', [ExaminerController::class, 'update'])
+                ->name('admin.examiners.update');
+
+            Route::patch('/admin/examiners/{examiner}/status', [ExaminerController::class, 'toggleStatus'])
+                ->name('admin.examiners.toggle-status');
+
+            Route::delete('/admin/examiners/{examiner}', [ExaminerController::class, 'destroy'])
+                ->name('admin.examiners.destroy');
+
+            // Student Management
             Route::get('/admin/students', [StudentController::class, 'index'])
                 ->name('admin.students.index');
 
-                Route::get('/admin/students/create', [StudentController::class, 'create'])
-               ->name('admin.students.create');
+            // Student Excel/CSV Import
+            Route::get('/admin/students/import/template', [StudentController::class, 'downloadTemplate'])
+                ->name('admin.students.import.template');
 
-                Route::post('/admin/students', [StudentController::class, 'store'])
-               ->name('admin.students.store');
+            Route::post('/admin/students/import', [StudentController::class, 'import'])
+                ->name('admin.students.import');
+
+            Route::get('/admin/students/create', [StudentController::class, 'create'])
+                ->name('admin.students.create');
+
+            Route::post('/admin/students', [StudentController::class, 'store'])
+                ->name('admin.students.store');
+
+            Route::get('/admin/students/{student}', [StudentController::class, 'show'])
+                ->name('admin.students.show');
+
+            Route::get('/admin/students/{student}/edit', [StudentController::class, 'edit'])
+                ->name('admin.students.edit');
+
+            Route::put('/admin/students/{student}', [StudentController::class, 'update'])
+                ->name('admin.students.update');
+
+            Route::delete('/admin/students/{student}', [StudentController::class, 'destroy'])
+                ->name('admin.students.destroy');
+
+            Route::patch('/admin/students/{student}/status', [StudentController::class, 'toggleStatus'])
+                ->name('admin.students.toggle-status');
         });
 
         Route::middleware('role:examiner')->group(function () {
