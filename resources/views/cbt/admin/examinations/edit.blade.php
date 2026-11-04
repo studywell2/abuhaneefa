@@ -59,10 +59,13 @@
             box-shadow: 0 0 0 0.2rem rgba(36, 76, 64, 0.12);
         }
 
-        .form-control[readonly] {
+        .form-control[readonly],
+        .form-select:disabled {
             background: #F0F3F0;
-            font-weight: 700;
+            font-weight: 600;
             color: #244C40;
+            opacity: 1;
+            cursor: not-allowed;
         }
 
         .btn-academy {
@@ -110,6 +113,16 @@
             font-size: 11px;
         }
 
+        .locked-note {
+            background: #FFF6E5;
+            border: 1px solid #EBD7A9;
+            color: #76551A;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
         footer {
             text-align: center;
             color: #777;
@@ -119,6 +132,12 @@
 </head>
 
 <body>
+
+@php
+    $hasAttempts = \Illuminate\Support\Facades\DB::table('examination_attempts')
+        ->where('examination_id', $examination->id)
+        ->exists();
+@endphp
 
 <header class="topbar">
     <div class="container">
@@ -150,6 +169,7 @@
     <div class="form-card">
 
         <div class="info-panel mb-4">
+
             <div class="fw-bold mb-1">
                 Examination: {{ $examination->title }}
             </div>
@@ -162,12 +182,20 @@
                 Remaining objective marks: {{ $examination->objective_total - $allocatedMarks }}
             </div>
 
-            @if (\Illuminate\Support\Facades\DB::table('examination_attempts')->where('examination_id', $examination->id)->exists())
-                <div class="text-danger small mt-2">
-                    Students have already attempted this examination. Its scoring structure cannot be changed.
-                    Its class and department are also locked.
+            @if ($hasAttempts)
+                <div class="locked-note">
+                    <strong>Examination settings locked</strong>
+
+                    <p class="mb-0 mt-1">
+                        Students have already attempted this examination.
+                        Its title, subject, class, department, academic year,
+                        term, mode, duration, scoring structure, pass mark,
+                        schedule and instructions cannot be changed.
+                        The examination status can still be managed separately.
+                    </p>
                 </div>
             @endif
+
         </div>
 
         @if ($errors->any())
@@ -188,6 +216,14 @@
             @csrf
             @method('PUT')
 
+            {{-- Preserve disabled select values when the examination is locked. --}}
+            @if ($hasAttempts)
+                <input type="hidden" name="school_class_id" value="{{ $examination->school_class_id }}">
+                <input type="hidden" name="department" value="{{ $examination->department ?? '' }}">
+                <input type="hidden" name="term" value="{{ $examination->term }}">
+                <input type="hidden" name="mode" value="{{ $examination->mode }}">
+            @endif
+
             <h5 class="section-title mb-3">Basic Information</h5>
 
             <div class="row g-3">
@@ -199,6 +235,7 @@
                            name="title"
                            class="form-control"
                            value="{{ old('title', $examination->title) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
@@ -209,15 +246,17 @@
                            name="subject"
                            class="form-control"
                            value="{{ old('subject', $examination->subject) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Class</label>
 
-                    <select name="school_class_id"
+                    <select name="{{ $hasAttempts ? '' : 'school_class_id' }}"
                             id="school_class_id"
                             class="form-select"
+                            {{ $hasAttempts ? 'disabled' : '' }}
                             required>
 
                         <option value="">Select class</option>
@@ -232,19 +271,18 @@
                     </select>
                 </div>
 
-                <!-- DEPARTMENT SELECTION -->
-
                 <div class="col-md-6"
                      id="department-container"
-                     style="display: none;">
+                     style="{{ $examination->department || str_starts_with(strtoupper($examination->schoolClass->name ?? ''), 'SS') ? 'display:block;' : 'display:none;' }}">
 
                     <label class="form-label">
                         Examination Department
                     </label>
 
-                    <select name="department"
+                    <select name="{{ $hasAttempts ? '' : 'department' }}"
                             id="department"
-                            class="form-select">
+                            class="form-select"
+                            {{ $hasAttempts ? 'disabled' : '' }}>
 
                         <option value="">
                             General Examination (All Departments)
@@ -276,26 +314,36 @@
                            value="{{ old('academic_year', $examination->academic_year) }}"
                            placeholder="2026/2027"
                            maxlength="20"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Term</label>
 
-                    <select name="term" class="form-select" required>
+                    <select name="{{ $hasAttempts ? '' : 'term' }}"
+                            class="form-select"
+                            {{ $hasAttempts ? 'disabled' : '' }}
+                            required>
+
                         @foreach (['First', 'Second', 'Third'] as $term)
                             <option value="{{ $term }}"
                                 @selected(old('term', $examination->term) == $term)>
                                 {{ $term }} Term
                             </option>
                         @endforeach
+
                     </select>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Examination Mode</label>
 
-                    <select name="mode" class="form-select" required>
+                    <select name="{{ $hasAttempts ? '' : 'mode' }}"
+                            class="form-select"
+                            {{ $hasAttempts ? 'disabled' : '' }}
+                            required>
+
                         <option value="online"
                             @selected(old('mode', $examination->mode) == 'online')>
                             Online
@@ -305,6 +353,7 @@
                             @selected(old('mode', $examination->mode) == 'physical')>
                             Physical Centre
                         </option>
+
                     </select>
                 </div>
 
@@ -334,6 +383,7 @@
                            class="form-control"
                            min="1"
                            value="{{ old('duration_minutes', $examination->duration_minutes) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
@@ -346,6 +396,7 @@
                            class="form-control component-mark"
                            min="0"
                            value="{{ old('ca_total', $examination->ca_total) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
@@ -358,6 +409,7 @@
                            class="form-control component-mark"
                            min="0"
                            value="{{ old('objective_total', $examination->objective_total) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
@@ -370,6 +422,7 @@
                            class="form-control component-mark"
                            min="0"
                            value="{{ old('theory_total', $examination->theory_total) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
                 </div>
 
@@ -397,6 +450,7 @@
                            class="form-control"
                            min="0"
                            value="{{ old('pass_mark', $examination->pass_mark) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}
                            required>
 
                     <div class="form-text">
@@ -410,7 +464,8 @@
                     <input type="datetime-local"
                            name="start_time"
                            class="form-control"
-                           value="{{ old('start_time', $examination->start_time?->format('Y-m-d\TH:i')) }}">
+                           value="{{ old('start_time', $examination->start_time?->format('Y-m-d\TH:i')) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}>
                 </div>
 
                 <div class="col-md-6">
@@ -419,7 +474,8 @@
                     <input type="datetime-local"
                            name="end_time"
                            class="form-control"
-                           value="{{ old('end_time', $examination->end_time?->format('Y-m-d\TH:i')) }}">
+                           value="{{ old('end_time', $examination->end_time?->format('Y-m-d\TH:i')) }}"
+                           {{ $hasAttempts ? 'readonly' : '' }}>
                 </div>
 
                 <div class="col-12">
@@ -428,7 +484,8 @@
                     <textarea name="instructions"
                               class="form-control"
                               rows="4"
-                              placeholder="Enter instructions for students...">{{ old('instructions', $examination->instructions) }}</textarea>
+                              placeholder="Enter instructions for students..."
+                              {{ $hasAttempts ? 'readonly' : '' }}>{{ old('instructions', $examination->instructions) }}</textarea>
                 </div>
 
             </div>
@@ -459,13 +516,17 @@
 </footer>
 
 <script>
-    // Show department selection only for senior secondary classes.
+    const hasAttempts = @json($hasAttempts);
 
     const classSelect = document.getElementById('school_class_id');
     const departmentContainer = document.getElementById('department-container');
     const departmentSelect = document.getElementById('department');
 
     function updateDepartmentVisibility() {
+
+        if (hasAttempts) {
+            return;
+        }
 
         const selectedOption = classSelect.options[classSelect.selectedIndex];
 
@@ -489,13 +550,10 @@
         }
     }
 
-    classSelect.addEventListener('change', updateDepartmentVisibility);
-
-    // Run when the page loads.
-    updateDepartmentVisibility();
-
-
-    // Automatic examination total calculation.
+    if (!hasAttempts) {
+        classSelect.addEventListener('change', updateDepartmentVisibility);
+        updateDepartmentVisibility();
+    }
 
     const caTotal = document.getElementById('ca_total');
     const objectiveTotal = document.getElementById('objective_total');
@@ -513,16 +571,21 @@
         const total = ca + objective + theory;
 
         totalMarks.value = total;
-        passMark.max = total;
 
-        if (Number(passMark.value) > total) {
-            passMark.value = total;
+        if (!hasAttempts) {
+            passMark.max = total;
+
+            if (Number(passMark.value) > total) {
+                passMark.value = total;
+            }
         }
     }
 
-    document.querySelectorAll('.component-mark').forEach(input => {
-        input.addEventListener('input', calculateTotalMarks);
-    });
+    if (!hasAttempts) {
+        document.querySelectorAll('.component-mark').forEach(input => {
+            input.addEventListener('input', calculateTotalMarks);
+        });
+    }
 
     calculateTotalMarks();
 </script>

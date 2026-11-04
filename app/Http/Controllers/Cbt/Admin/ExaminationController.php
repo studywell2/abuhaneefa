@@ -7,6 +7,7 @@ use App\Models\Examination;
 use App\Models\SchoolClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class ExaminationController extends Controller
 {
@@ -53,9 +54,7 @@ class ExaminationController extends Controller
 
         $class = SchoolClass::findOrFail($validated['school_class_id']);
 
-        // JSS classes do not have departments.
         if (!str_starts_with(strtoupper($class->name), 'SS')) {
-
             if (!empty($validated['department'])) {
                 return back()
                     ->withInput()
@@ -122,9 +121,7 @@ class ExaminationController extends Controller
 
         $class = SchoolClass::findOrFail($validated['school_class_id']);
 
-        // JSS classes do not have departments.
         if (!str_starts_with(strtoupper($class->name), 'SS')) {
-
             if (!empty($validated['department'])) {
                 return back()
                     ->withInput()
@@ -158,7 +155,6 @@ class ExaminationController extends Controller
             ->where('examination_id', $examination->id)
             ->exists();
 
-        // Protect examination class and department after attempts exist.
         if ($hasAttempts) {
 
             $classOrDepartmentChanged =
@@ -173,7 +169,6 @@ class ExaminationController extends Controller
                     ]);
             }
 
-            // Do not change scoring structure after students have attempted.
             $scoresChanged =
                 (int) $validated['ca_total'] !== (int) $examination->ca_total ||
                 (int) $validated['objective_total'] !== (int) $examination->objective_total ||
@@ -184,6 +179,44 @@ class ExaminationController extends Controller
                     ->withInput()
                     ->withErrors([
                         'ca_total' => 'The scoring structure cannot be changed because students have already attempted this examination.',
+                    ]);
+            }
+
+            // Compare examination dates safely.
+            $newStartTime = !empty($validated['start_time'])
+                ? Carbon::parse($validated['start_time'])->format('Y-m-d H:i:s')
+                : null;
+
+            $newEndTime = !empty($validated['end_time'])
+                ? Carbon::parse($validated['end_time'])->format('Y-m-d H:i:s')
+                : null;
+
+            $oldStartTime = $examination->start_time
+                ? $examination->start_time->format('Y-m-d H:i:s')
+                : null;
+
+            $oldEndTime = $examination->end_time
+                ? $examination->end_time->format('Y-m-d H:i:s')
+                : null;
+
+            // Protect all other examination settings after attempts exist.
+            $otherSettingsChanged =
+                $validated['title'] !== $examination->title ||
+                $validated['subject'] !== $examination->subject ||
+                $validated['academic_year'] !== $examination->academic_year ||
+                $validated['term'] !== $examination->term ||
+                (int) $validated['duration_minutes'] !== (int) $examination->duration_minutes ||
+                (int) $validated['pass_mark'] !== (int) $examination->pass_mark ||
+                $validated['mode'] !== $examination->mode ||
+                ($validated['instructions'] ?? null) !== $examination->instructions ||
+                $newStartTime !== $oldStartTime ||
+                $newEndTime !== $oldEndTime;
+
+            if ($otherSettingsChanged) {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'examination' => 'Examination settings cannot be changed because students have already attempted this examination.',
                     ]);
             }
         }
@@ -222,14 +255,12 @@ class ExaminationController extends Controller
 
         if ($validated['status'] === 'published') {
 
-            // Every examination must have a valid schedule before publishing.
             if (!$examination->start_time || !$examination->end_time) {
                 return back()->withErrors([
                     'status' => 'Set the examination start and end times before publishing.',
                 ]);
             }
 
-            // Online examinations require objective questions.
             if ($examination->mode === 'online') {
 
                 $questionCount = $examination->questions()->count();
@@ -254,8 +285,6 @@ class ExaminationController extends Controller
                     ]);
                 }
             }
-
-            // Physical examinations use the separate manual score-entry process.
         }
 
         $examination->update([
@@ -269,7 +298,6 @@ class ExaminationController extends Controller
 
     public function destroy(Examination $examination)
     {
-        // Protect examinations that already have student attempts.
         $hasAttempts = DB::table('examination_attempts')
             ->where('examination_id', $examination->id)
             ->exists();
@@ -283,11 +311,8 @@ class ExaminationController extends Controller
         }
 
         DB::transaction(function () use ($examination) {
-
             $examination->questions()->delete();
-
             $examination->delete();
-
         });
 
         return redirect()

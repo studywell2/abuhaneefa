@@ -37,13 +37,6 @@ class ExaminationController extends Controller
     /**
      * Confirm that an examination belongs to the student's class
      * and department.
-     *
-     * Senior students can access:
-     * - Their own departmental examinations.
-     * - General examinations with no department.
-     *
-     * Junior students can access:
-     * - Their own class examinations without a department.
      */
     private function authorizeStudentForExamination($student, Examination $examination): void
     {
@@ -91,7 +84,6 @@ class ExaminationController extends Controller
             ->where('end_time', '>', now());
 
         if ($isSeniorClass) {
-            // Senior students see general examinations and their own department.
             $examinationsQuery->where(function ($query) use ($student) {
                 $query->whereNull('department');
 
@@ -100,7 +92,6 @@ class ExaminationController extends Controller
                 }
             });
         } else {
-            // Junior examinations must not have a department.
             $examinationsQuery->whereNull('department');
         }
 
@@ -185,7 +176,6 @@ class ExaminationController extends Controller
         );
 
         $attempt = DB::transaction(function () use ($student, $examination) {
-
             $existingAttempt = ExaminationAttempt::where(
                 'student_id',
                 $student->id
@@ -299,7 +289,10 @@ class ExaminationController extends Controller
     }
 
     /**
-     * Save a student's selected answer.
+     * Save a student's selected answer safely.
+     *
+     * The attempt is locked while saving so that an answer
+     * cannot be saved concurrently with final submission.
      */
     public function saveAnswer(Request $request, Examination $examination)
     {
@@ -313,60 +306,85 @@ class ExaminationController extends Controller
             404
         );
 
+        $validated = $request->validate([
+            'question_id' => ['required', 'integer'],
+            'selected_option' => ['required', 'in:A,B,C,D'],
+        ]);
+
         $attempt = ExaminationAttempt::query()
             ->where('student_id', $student->id)
             ->where('examination_id', $examination->id)
             ->firstOrFail();
 
-        abort_unless(
-            $attempt->status === 'in_progress',
-            403,
-            'This examination attempt is no longer active.'
-        );
+        $timeExpired = false;
 
-        $deadline = $attempt->started_at
-            ->copy()
-            ->addMinutes($examination->duration_minutes);
-
-        if (
-            !$examination->end_time
-            || $examination->end_time->lessThan($deadline)
+        DB::transaction(function () use (
+            $attempt,
+            $examination,
+            $validated,
+            &$timeExpired
         ) {
-            $deadline = $examination->end_time;
-        }
+            // Obtain the same database lock used during final submission.
+            $lockedAttempt = ExaminationAttempt::query()
+                ->whereKey($attempt->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if (!$deadline || now()->greaterThanOrEqualTo($deadline)) {
+            abort_unless(
+                $lockedAttempt->status === 'in_progress',
+                403,
+                'This examination attempt is no longer active.'
+            );
+
+            $deadline = $lockedAttempt->started_at
+                ->copy()
+                ->addMinutes($examination->duration_minutes);
+
+            if (
+                !$examination->end_time
+                || $examination->end_time->lessThan($deadline)
+            ) {
+                $deadline = $examination->end_time;
+            }
+
+            if (!$deadline || now()->greaterThanOrEqualTo($deadline)) {
+                $timeExpired = true;
+
+                return;
+            }
+
+            // Confirm that the question belongs to this examination.
+            $questionExists = $examination->questions()
+                ->whereKey($validated['question_id'])
+                ->exists();
+
+            abort_unless(
+                $questionExists,
+                422,
+                'Invalid examination question.'
+            );
+
+            // Save the answer while the attempt remains locked.
+            StudentAnswer::updateOrCreate(
+                [
+                    'examination_attempt_id' => $lockedAttempt->id,
+                    'examination_question_id' => $validated['question_id'],
+                ],
+                [
+                    'selected_option' => $validated['selected_option'],
+                ]
+            );
+        });
+
+        if ($timeExpired) {
+            // The lock has been released. Finalise using the normal
+            // finalisation method, which obtains its own row lock.
             $this->finalizeAttempt($attempt, $examination);
 
             return response()->json([
                 'message' => 'Your examination time has expired.'
             ], 403);
         }
-
-        $validated = $request->validate([
-            'question_id' => ['required', 'integer'],
-            'selected_option' => ['required', 'in:A,B,C,D'],
-        ]);
-
-        $questionExists = $examination->questions()
-            ->whereKey($validated['question_id'])
-            ->exists();
-
-        abort_unless(
-            $questionExists,
-            422,
-            'Invalid examination question.'
-        );
-
-        StudentAnswer::updateOrCreate(
-            [
-                'examination_attempt_id' => $attempt->id,
-                'examination_question_id' => $validated['question_id'],
-            ],
-            [
-                'selected_option' => $validated['selected_option'],
-            ]
-        );
 
         return response()->json([
             'message' => 'Answer saved successfully.'

@@ -90,6 +90,7 @@ class ScoreController extends Controller
     ): void {
         $attemptQuery = $result->attempt()
             ->where('examination_id', $examination->id)
+            ->where('status', 'submitted')
             ->whereNotNull('submitted_at');
 
         $this->applyEligibleStudents(
@@ -101,6 +102,110 @@ class ScoreController extends Controller
             $attemptQuery->exists(),
             404,
             'The result does not belong to an eligible student in this examination.'
+        );
+    }
+
+    /**
+     * Verify that every score component and calculated result
+     * is complete and correct before examiner review.
+     */
+    private function verifyResultForReview(
+        ExaminationResult $result,
+        Examination $examination
+    ): void {
+        $components = [
+            'ca_marks' => (int) $examination->ca_total,
+            'objective_marks' => (int) $examination->objective_total,
+            'theory_marks' => (int) $examination->theory_total,
+        ];
+
+        $configuredTotal = array_sum($components);
+
+        abort_unless(
+            (int) $examination->total_marks === $configuredTotal
+            && $configuredTotal > 0,
+            422,
+            'The examination scoring configuration is inconsistent.'
+        );
+
+        abort_unless(
+            (int) $examination->pass_mark >= 0
+            && (int) $examination->pass_mark <= $configuredTotal,
+            422,
+            'The examination pass mark is invalid.'
+        );
+
+        $calculatedMarks = 0;
+
+        foreach ($components as $field => $maximum) {
+            $marks = $result->{$field};
+
+            // No score is required when the component maximum is zero.
+            if ($maximum === 0) {
+                abort_unless(
+                    $marks === null || (
+                        is_numeric($marks)
+                        && (float) $marks === 0.0
+                    ),
+                    422,
+                    'A score was recorded for a component that has no allocated marks.'
+                );
+
+                continue;
+            }
+
+            // Every component with allocated marks must be completed.
+            abort_unless(
+                $marks !== null && is_numeric($marks),
+                422,
+                'This result is incomplete. All required score components must be entered.'
+            );
+
+            $marks = (float) $marks;
+
+            abort_unless(
+                $marks >= 0
+                && $marks <= $maximum
+                && floor($marks) === $marks,
+                422,
+                'One or more score components contain invalid marks.'
+            );
+
+            $calculatedMarks += (int) $marks;
+        }
+
+        abort_unless(
+            (int) $result->marks_obtained === $calculatedMarks,
+            422,
+            'The recorded total does not match the individual score components.'
+        );
+
+        abort_unless(
+            (int) $result->total_marks === $configuredTotal,
+            422,
+            'The result total does not match the examination total.'
+        );
+
+        $expectedPercentage = round(
+            ($calculatedMarks / $configuredTotal) * 100,
+            2
+        );
+
+        abort_unless(
+            $result->percentage !== null
+            && round((float) $result->percentage, 2) === $expectedPercentage,
+            422,
+            'The recorded percentage is incorrect.'
+        );
+
+        $expectedOutcome = $calculatedMarks >= (int) $examination->pass_mark
+            ? 'passed'
+            : 'failed';
+
+        abort_unless(
+            $result->outcome === $expectedOutcome,
+            422,
+            'The recorded pass/fail outcome is incorrect.'
         );
     }
 
@@ -127,20 +232,17 @@ class ScoreController extends Controller
             ->with(['student', 'result'])
             ->whereNotNull('submitted_at');
 
-        // Preserve class and department eligibility restrictions.
         $this->applyEligibleStudents(
             $attemptsQuery,
             $examination
         );
 
-        // Show only results awaiting score entry.
         if ($task === 'entry') {
             $attemptsQuery->whereHas('result', function ($query) {
                 $query->where('status', 'awaiting_scores');
             });
         }
 
-        // Show only results awaiting examiner review.
         if ($task === 'review') {
             $attemptsQuery->whereHas('result', function ($query) {
                 $query->where('status', 'pending_review');
@@ -248,7 +350,6 @@ class ScoreController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            // Recheck eligibility inside the transaction.
             $this->ensureResultBelongsToExamination(
                 $lockedResult,
                 $examination
@@ -358,6 +459,12 @@ class ScoreController extends Controller
             $examination
         );
 
+        abort_unless(
+            $result->status === 'pending_review',
+            403,
+            'This result is not currently awaiting examiner review.'
+        );
+
         $result->load([
             'attempt.student',
             'scoreAudits.examiner',
@@ -399,7 +506,6 @@ class ScoreController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            // Recheck eligibility inside the transaction.
             $this->ensureResultBelongsToExamination(
                 $lockedResult,
                 $examination
@@ -409,6 +515,12 @@ class ScoreController extends Controller
                 $lockedResult->status === 'pending_review',
                 403,
                 'This result is not currently awaiting examiner review.'
+            );
+
+            // Independently verify all scores and calculations.
+            $this->verifyResultForReview(
+                $lockedResult,
+                $examination
             );
 
             $lockedResult->reviewed_by = $request->user()->id;
