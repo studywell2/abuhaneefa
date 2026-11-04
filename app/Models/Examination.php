@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Examination extends Model
 {
@@ -12,10 +13,14 @@ class Examination extends Model
         'title',
         'subject',
         'school_class_id',
+        'department',
         'academic_year',
         'term',
         'duration_minutes',
         'total_marks',
+        'ca_total',
+        'objective_total',
+        'theory_total',
         'pass_mark',
         'mode',
         'start_time',
@@ -30,6 +35,9 @@ class Examination extends Model
         return [
             'duration_minutes' => 'integer',
             'total_marks' => 'integer',
+            'ca_total' => 'integer',
+            'objective_total' => 'integer',
+            'theory_total' => 'integer',
             'pass_mark' => 'integer',
             'start_time' => 'datetime',
             'end_time' => 'datetime',
@@ -50,5 +58,27 @@ class Examination extends Model
     {
         return $this->hasMany(ExaminationQuestion::class)
             ->orderBy('question_order');
+    }
+
+    public function examinerAssignments(): HasMany
+    {
+        return $this->hasMany(ExaminationAssignment::class);
+    }
+
+    public function examiners(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'examination_assignments',
+            'examination_id',
+            'examiner_id'
+        )
+            ->withPivot(['assigned_by', 'assigned_at'])
+            ->withTimestamps();
+    }
+
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(ExaminationAttempt::class);
     }
 }

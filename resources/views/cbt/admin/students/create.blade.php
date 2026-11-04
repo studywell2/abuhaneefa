@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,9 +20,7 @@
             --muted: #718096;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -34,8 +33,6 @@
                 var(--background);
             overflow-x: hidden;
         }
-
-        /* Animated background */
 
         .background-shape {
             position: fixed;
@@ -65,16 +62,9 @@
         }
 
         @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-25px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
         }
-
-        /* Header */
 
         .header {
             text-align: center;
@@ -94,8 +84,6 @@
             color: var(--blue);
             font-size: 14px;
         }
-
-        /* Main container */
 
         .container {
             max-width: 850px;
@@ -118,8 +106,6 @@
             color: var(--gold);
             transform: translateX(-4px);
         }
-
-        /* Main card */
 
         .card {
             background: rgba(255, 255, 255, .88);
@@ -148,11 +134,7 @@
             line-height: 1.6;
         }
 
-        /* Progress */
-
-        .progress-area {
-            margin-bottom: 28px;
-        }
+        .progress-area { margin-bottom: 28px; }
 
         .progress-labels {
             display: flex;
@@ -164,9 +146,7 @@
             color: var(--muted);
         }
 
-        .progress-labels span.active {
-            color: var(--navy);
-        }
+        .progress-labels span.active { color: var(--navy); }
 
         .progress-track {
             height: 6px;
@@ -183,8 +163,6 @@
             transition: width .6s ease;
         }
 
-        /* Error message */
-
         .error-box {
             background: #fff1f2;
             color: #9f1239;
@@ -200,11 +178,7 @@
             padding-left: 20px;
         }
 
-        /* Flip form */
-
-        .flip-container {
-            perspective: 1200px;
-        }
+        .flip-container { perspective: 1200px; }
 
         .flip-inner {
             display: grid;
@@ -212,9 +186,7 @@
             transition: transform .75s cubic-bezier(.2, .75, .25, 1);
         }
 
-        .flip-inner.flipped {
-            transform: rotateY(180deg);
-        }
+        .flip-inner.flipped { transform: rotateY(180deg); }
 
         .flip-face {
             grid-area: 1 / 1;
@@ -223,11 +195,7 @@
             -webkit-backface-visibility: hidden;
         }
 
-        .flip-back {
-            transform: rotateY(180deg);
-        }
-
-        /* Section headings */
+        .flip-back { transform: rotateY(180deg); }
 
         .section-title {
             color: var(--navy);
@@ -243,8 +211,6 @@
             font-size: 13px;
             margin: -8px 0 22px;
         }
-
-        /* Form fields */
 
         .form-grid {
             display: grid;
@@ -266,22 +232,14 @@
         .form-group:nth-child(5) { animation-delay: .25s; }
         .form-group:nth-child(6) { animation-delay: .30s; }
         .form-group:nth-child(7) { animation-delay: .35s; }
+        .form-group:nth-child(8) { animation-delay: .40s; }
 
         @keyframes fieldAppear {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .full-width {
-            grid-column: 1 / -1;
-        }
+        .full-width { grid-column: 1 / -1; }
 
         label {
             color: var(--navy);
@@ -289,8 +247,7 @@
             font-weight: bold;
         }
 
-        input,
-        select {
+        input, select {
             width: 100%;
             padding: 14px;
             border: 1px solid #d5e0e5;
@@ -302,30 +259,22 @@
             transition: border-color .3s, box-shadow .3s, transform .3s;
         }
 
-        input:hover,
-        select:hover {
-            border-color: var(--blue);
-        }
+        input:hover, select:hover { border-color: var(--blue); }
 
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--blue);
             box-shadow: 0 0 0 4px rgba(49, 92, 114, .12);
             transform: translateY(-2px);
         }
 
-        input::placeholder {
-            color: #a0acb5;
-        }
+        input::placeholder { color: #a0acb5; }
 
         .help-text {
             color: var(--muted);
             font-size: 12px;
             line-height: 1.5;
         }
-
-        /* Buttons */
 
         .actions {
             display: flex;
@@ -373,9 +322,7 @@
             transform: translateY(-2px);
         }
 
-        .button:active {
-            transform: scale(.97);
-        }
+        .button:active { transform: scale(.97); }
 
         .footer-note {
             text-align: center;
@@ -385,66 +332,30 @@
         }
 
         @keyframes fadeDown {
-            from {
-                opacity: 0;
-                transform: translateY(-15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mobile */
-
         @media (max-width: 600px) {
-            .header h1 {
-                font-size: 21px;
-            }
-
-            .container {
-                margin-top: 12px;
-            }
-
-            .card {
-                padding: 22px 18px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .full-width {
-                grid-column: auto;
-            }
-
+            .header h1 { font-size: 21px; }
+            .container { margin-top: 12px; }
+            .card { padding: 22px 18px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: auto; }
             .actions {
                 flex-direction: column-reverse;
                 align-items: stretch;
             }
-
-            .button {
-                width: 100%;
-            }
+            .button { width: 100%; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
+            *, *::before, *::after {
                 animation-duration: .01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: .01ms !important;
@@ -484,7 +395,6 @@
             @if ($errors->any())
                 <div class="error-box">
                     <strong>Please correct the following errors:</strong>
-
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -517,16 +427,11 @@
                 @csrf
 
                 <div class="flip-container">
-
                     <div class="flip-inner" id="flipInner">
-
-                        {{-- PAGE ONE: STUDENT INFORMATION --}}
 
                         <div class="flip-face flip-front">
 
-                            <h3 class="section-title">
-                                Student Information
-                            </h3>
+                            <h3 class="section-title">Student Information</h3>
 
                             <p class="section-description">
                                 Provide the student's personal and academic details.
@@ -536,7 +441,6 @@
 
                                 <div class="form-group">
                                     <label for="first_name">First Name *</label>
-
                                     <input
                                         type="text"
                                         id="first_name"
@@ -551,7 +455,6 @@
 
                                 <div class="form-group">
                                     <label for="last_name">Last Name *</label>
-
                                     <input
                                         type="text"
                                         id="last_name"
@@ -566,7 +469,6 @@
 
                                 <div class="form-group">
                                     <label for="other_names">Other Names</label>
-
                                     <input
                                         type="text"
                                         id="other_names"
@@ -579,7 +481,6 @@
 
                                 <div class="form-group">
                                     <label for="email">Student Email Address *</label>
-
                                     <input
                                         type="email"
                                         id="email"
@@ -590,7 +491,6 @@
                                         placeholder="Enter email address"
                                         required
                                     >
-
                                     <span class="help-text">
                                         Each student account must have a unique email address.
                                     </span>
@@ -598,17 +498,13 @@
 
                                 <div class="form-group">
                                     <label for="school_class_id">Class *</label>
-
-                                    <select
-                                        id="school_class_id"
-                                        name="school_class_id"
-                                        required
-                                    >
+                                    <select id="school_class_id" name="school_class_id" required>
                                         <option value="">Select class</option>
 
                                         @foreach ($classes as $class)
                                             <option
                                                 value="{{ $class->id }}"
+                                                data-class-name="{{ $class->name }}"
                                                 @selected(old('school_class_id') == $class->id)
                                             >
                                                 {{ $class->name }}
@@ -617,9 +513,49 @@
                                     </select>
                                 </div>
 
+                                <div
+                                    class="form-group"
+                                    id="departmentGroup"
+                                    style="display: none;"
+                                >
+                                    <label for="department">Department *</label>
+
+                                    <select
+                                        id="department"
+                                        name="department"
+                                        disabled
+                                    >
+                                        <option value="">Select department</option>
+
+                                        <option
+                                            value="Science"
+                                            @selected(old('department') === 'Science')
+                                        >
+                                            Science
+                                        </option>
+
+                                        <option
+                                            value="Arts"
+                                            @selected(old('department') === 'Arts')
+                                        >
+                                            Arts
+                                        </option>
+
+                                        <option
+                                            value="Commercial"
+                                            @selected(old('department') === 'Commercial')
+                                        >
+                                            Commercial
+                                        </option>
+                                    </select>
+
+                                    <span class="help-text">
+                                        Required for Senior Secondary students only.
+                                    </span>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="date_of_birth">Date of Birth</label>
-
                                     <input
                                         type="date"
                                         id="date_of_birth"
@@ -631,23 +567,10 @@
 
                                 <div class="form-group">
                                     <label for="gender">Gender</label>
-
                                     <select id="gender" name="gender">
                                         <option value="">Select gender</option>
-
-                                        <option
-                                            value="Male"
-                                            @selected(old('gender') === 'Male')
-                                        >
-                                            Male
-                                        </option>
-
-                                        <option
-                                            value="Female"
-                                            @selected(old('gender') === 'Female')
-                                        >
-                                            Female
-                                        </option>
+                                        <option value="Male" @selected(old('gender') === 'Male')>Male</option>
+                                        <option value="Female" @selected(old('gender') === 'Female')>Female</option>
                                     </select>
                                 </div>
 
@@ -672,9 +595,6 @@
 
                         </div>
 
-
-                        {{-- PAGE TWO: GUARDIAN INFORMATION --}}
-
                         <div class="flip-face flip-back">
 
                             <h3 class="section-title">
@@ -688,10 +608,7 @@
                             <div class="form-grid">
 
                                 <div class="form-group full-width">
-                                    <label for="guardian_name">
-                                        Guardian's Full Name
-                                    </label>
-
+                                    <label for="guardian_name">Guardian's Full Name</label>
                                     <input
                                         type="text"
                                         id="guardian_name"
@@ -704,10 +621,7 @@
                                 </div>
 
                                 <div class="form-group full-width">
-                                    <label for="guardian_phone">
-                                        Guardian's Phone Number
-                                    </label>
-
+                                    <label for="guardian_phone">Guardian's Phone Number</label>
                                     <input
                                         type="tel"
                                         id="guardian_phone"
@@ -722,7 +636,6 @@
                             </div>
 
                             <div class="actions">
-
                                 <button
                                     type="button"
                                     class="button secondary-button"
@@ -731,13 +644,9 @@
                                     &larr; Go Back
                                 </button>
 
-                                <button
-                                    type="submit"
-                                    class="button primary-button"
-                                >
+                                <button type="submit" class="button primary-button">
                                     Register Student &#10003;
                                 </button>
-
                             </div>
 
                         </div>
@@ -752,9 +661,7 @@
             </div>
 
         </section>
-
     </main>
-
 
     <script>
         const form = document.getElementById('studentRegistrationForm');
@@ -768,10 +675,36 @@
         const stepOneLabel = document.getElementById('stepOneLabel');
         const stepTwoLabel = document.getElementById('stepTwoLabel');
 
+        const classSelect = document.getElementById('school_class_id');
+        const departmentGroup = document.getElementById('departmentGroup');
+        const departmentSelect = document.getElementById('department');
+
         let currentStep = 1;
 
-        function validateStudentInformation() {
+        function updateDepartmentField() {
+            const selectedOption = classSelect.options[classSelect.selectedIndex];
 
+            const className = selectedOption
+                ? selectedOption.dataset.className || ''
+                : '';
+
+            const isSeniorSecondary = /^SS[1-3]$/i.test(className.trim());
+
+            departmentGroup.style.display = isSeniorSecondary ? 'flex' : 'none';
+
+            departmentSelect.disabled = !isSeniorSecondary;
+            departmentSelect.required = isSeniorSecondary;
+
+            if (!isSeniorSecondary) {
+                departmentSelect.value = '';
+            }
+        }
+
+        classSelect.addEventListener('change', updateDepartmentField);
+
+        updateDepartmentField();
+
+        function validateStudentInformation() {
             const firstPage = document.querySelector('.flip-front');
 
             const fields = firstPage.querySelectorAll(
@@ -779,13 +712,9 @@
             );
 
             for (const field of fields) {
-
                 if (!field.checkValidity()) {
-
                     field.reportValidity();
-
                     field.focus();
-
                     return false;
                 }
             }
@@ -794,7 +723,6 @@
         }
 
         function goToGuardianInformation() {
-
             if (!validateStudentInformation()) {
                 return;
             }
@@ -802,25 +730,20 @@
             currentStep = 2;
 
             flipInner.classList.add('flipped');
-
             progressBar.style.width = '100%';
 
             stepOneLabel.classList.remove('active');
             stepTwoLabel.classList.add('active');
-
         }
 
         function goToStudentInformation() {
-
             currentStep = 1;
 
             flipInner.classList.remove('flipped');
-
             progressBar.style.width = '50%';
 
             stepTwoLabel.classList.remove('active');
             stepOneLabel.classList.add('active');
-
         }
 
         continueButton.addEventListener('click', function () {
@@ -832,15 +755,10 @@
         });
 
         form.addEventListener('submit', function (event) {
-
             if (currentStep === 1) {
-
                 event.preventDefault();
-
                 goToGuardianInformation();
-
             }
-
         });
     </script>
 

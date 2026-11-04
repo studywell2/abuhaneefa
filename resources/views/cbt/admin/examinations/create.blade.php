@@ -149,6 +149,12 @@
             box-shadow: 0 0 0 2px rgba(36, 76, 64, .08);
         }
 
+        .form-control[readonly] {
+            background: #F0F3F0;
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+
         textarea.form-control {
             min-height: 105px;
         }
@@ -160,6 +166,26 @@
         .form-text {
             font-size: 11px;
             color: var(--muted);
+        }
+
+        .score-note {
+            background: #F3F6F2;
+            border: 1px solid var(--border);
+            padding: 13px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #47554C;
+            margin-bottom: 20px;
+        }
+
+        .department-note {
+            background: #F3F6F2;
+            border: 1px solid var(--border);
+            padding: 11px 13px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #47554C;
+            margin-top: 9px;
         }
 
         .btn-save {
@@ -339,6 +365,7 @@
                             </label>
 
                             <select name="school_class_id"
+                                    id="school_class_id"
                                     class="form-select"
                                     required>
 
@@ -362,6 +389,46 @@
                                     No active classes are available. Add or activate a class first.
                                 </div>
                             @endif
+
+                        </div>
+
+
+                        <!-- DEPARTMENT SELECTION -->
+
+                        <div class="col-md-6"
+                             id="department-container"
+                             style="display: none;">
+
+                            <label class="form-label">
+                                Examination Department
+                            </label>
+
+                            <select name="department"
+                                    id="department"
+                                    class="form-select">
+
+                                <option value="">
+                                    General Examination (All Departments)
+                                </option>
+
+                                @foreach ($departments as $department)
+
+                                    <option value="{{ $department }}"
+                                        {{ old('department') == $department ? 'selected' : '' }}>
+
+                                        {{ $department }}
+
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                            <div class="department-note">
+                                Leave this as General Examination for subjects
+                                shared by all departments. Select a department
+                                for subjects specific to Science, Arts or Commercial.
+                            </div>
 
                         </div>
 
@@ -454,11 +521,18 @@
                     <h5>Examination Configuration</h5>
 
                     <p>
-                        Set the examination duration and marking structure.
+                        Set the duration and maximum marks for each assessment component.
                     </p>
                 </div>
 
                 <div class="panel-body">
+
+                    <div class="score-note">
+                        <strong>Scoring structure:</strong>
+                        Enter the maximum marks for CA, Objective and Theory.
+                        The system will calculate the overall examination total automatically.
+                        The three components must add up to a value greater than zero.
+                    </div>
 
                     <div class="row g-3">
 
@@ -481,16 +555,70 @@
                         <div class="col-md-4">
 
                             <label class="form-label">
-                                Total Marks <span class="required">*</span>
+                                CA Maximum Marks <span class="required">*</span>
+                            </label>
+
+                            <input type="number"
+                                   name="ca_total"
+                                   id="ca_total"
+                                   class="form-control component-mark"
+                                   min="0"
+                                   value="{{ old('ca_total', 40) }}"
+                                   required>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <label class="form-label">
+                                Objective Maximum Marks <span class="required">*</span>
+                            </label>
+
+                            <input type="number"
+                                   name="objective_total"
+                                   id="objective_total"
+                                   class="form-control component-mark"
+                                   min="0"
+                                   value="{{ old('objective_total', 30) }}"
+                                   required>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <label class="form-label">
+                                Theory Maximum Marks <span class="required">*</span>
+                            </label>
+
+                            <input type="number"
+                                   name="theory_total"
+                                   id="theory_total"
+                                   class="form-control component-mark"
+                                   min="0"
+                                   value="{{ old('theory_total', 30) }}"
+                                   required>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <label class="form-label">
+                                Total Marks
                             </label>
 
                             <input type="number"
                                    name="total_marks"
                                    id="total_marks"
                                    class="form-control"
-                                   min="1"
                                    value="{{ old('total_marks', 100) }}"
-                                   required>
+                                   readonly>
+
+                            <div class="form-text">
+                                Automatically calculated.
+                            </div>
 
                         </div>
 
@@ -630,13 +758,74 @@
 
     </main>
 
+
     <script>
+        // Department visibility based on selected class.
+
+        const classSelect = document.getElementById('school_class_id');
+        const departmentContainer = document.getElementById('department-container');
+        const departmentSelect = document.getElementById('department');
+
+        function updateDepartmentVisibility() {
+
+            const selectedOption = classSelect.options[classSelect.selectedIndex];
+
+            const selectedClass = selectedOption
+                ? selectedOption.text.trim().toUpperCase()
+                : '';
+
+            const isSeniorSecondary = selectedClass.startsWith('SS');
+
+            if (isSeniorSecondary) {
+
+                departmentContainer.style.display = 'block';
+                departmentSelect.disabled = false;
+
+            } else {
+
+                departmentContainer.style.display = 'none';
+                departmentSelect.value = '';
+                departmentSelect.disabled = true;
+
+            }
+        }
+
+        classSelect.addEventListener('change', updateDepartmentVisibility);
+
+        // Run once when the page loads.
+        updateDepartmentVisibility();
+
+
+        // Automatic examination total calculation.
+
+        const caTotal = document.getElementById('ca_total');
+        const objectiveTotal = document.getElementById('objective_total');
+        const theoryTotal = document.getElementById('theory_total');
+
         const totalMarks = document.getElementById('total_marks');
         const passMark = document.getElementById('pass_mark');
 
-        totalMarks.addEventListener('input', function () {
-            passMark.max = this.value;
+        function calculateTotalMarks() {
+
+            const ca = Number(caTotal.value) || 0;
+            const objective = Number(objectiveTotal.value) || 0;
+            const theory = Number(theoryTotal.value) || 0;
+
+            const total = ca + objective + theory;
+
+            totalMarks.value = total;
+            passMark.max = total;
+
+            if (Number(passMark.value) > total) {
+                passMark.value = total;
+            }
+        }
+
+        document.querySelectorAll('.component-mark').forEach(input => {
+            input.addEventListener('input', calculateTotalMarks);
         });
+
+        calculateTotalMarks();
     </script>
 
 </body>

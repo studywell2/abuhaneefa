@@ -6,10 +6,20 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
 
 use App\Http\Controllers\Cbt\AuthController as CbtAuthController;
+use App\Http\Controllers\Cbt\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Cbt\Admin\StudentController;
 use App\Http\Controllers\Cbt\Admin\ExaminerController;
 use App\Http\Controllers\Cbt\Admin\ExaminationController;
 use App\Http\Controllers\Cbt\Admin\ExaminationQuestionController;
+use App\Http\Controllers\Cbt\Admin\ExaminationAssignmentController;
+use App\Http\Controllers\Cbt\Admin\ResultApprovalController;
+use App\Http\Controllers\Cbt\Admin\ResultPinController;
+
+use App\Http\Controllers\Cbt\Examiner\DashboardController as ExaminerDashboardController;
+use App\Http\Controllers\Cbt\Examiner\ScoreController as ExaminerScoreController;
+
+use App\Http\Controllers\Cbt\Student\ExaminationController as StudentExaminationController;
+use App\Http\Controllers\Cbt\Student\ResultController as StudentResultController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -61,7 +71,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('cbt')->name('cbt.')->group(function () {
 
-    // CBT Authentication
+    // CBT AUTHENTICATION
+
     Route::get('/login', [CbtAuthController::class, 'showLogin'])
         ->name('login');
 
@@ -70,10 +81,12 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
         ->name('login.submit');
 
 
-    // Authenticated CBT Routes
+    // AUTHENTICATED CBT ROUTES
+
     Route::middleware('auth')->group(function () {
 
-        // Role-based CBT Dashboard Redirect
+        // ROLE-BASED DASHBOARD REDIRECT
+
         Route::get('/dashboard', function () {
 
             $user = auth()->user();
@@ -99,14 +112,13 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
 
         Route::middleware('role:administrator')->group(function () {
 
-            // Admin Dashboard
-            Route::view('/admin/dashboard', 'cbt.admin.dashboard')
+            // ADMIN DASHBOARD
+
+            Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
                 ->name('admin.dashboard');
 
 
-            // ----------------------------------------------
             // EXAMINER MANAGEMENT
-            // ----------------------------------------------
 
             Route::get('/admin/examiners', [ExaminerController::class, 'index'])
                 ->name('admin.examiners.index');
@@ -133,14 +145,11 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
                 ->name('admin.examiners.destroy');
 
 
-            // ----------------------------------------------
             // STUDENT MANAGEMENT
-            // ----------------------------------------------
 
             Route::get('/admin/students', [StudentController::class, 'index'])
                 ->name('admin.students.index');
 
-            // Student CSV Import
             Route::get('/admin/students/import/template', [StudentController::class, 'downloadTemplate'])
                 ->name('admin.students.import.template');
 
@@ -169,9 +178,7 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
                 ->name('admin.students.toggle-status');
 
 
-            // ----------------------------------------------
-// EXAMINATION MANAGEMENT
-// ----------------------------------------------
+            // EXAMINATION MANAGEMENT
 
             Route::get('/admin/examinations', [ExaminationController::class, 'index'])
                 ->name('admin.examinations.index');
@@ -188,7 +195,6 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
             Route::put('/admin/examinations/{examination}', [ExaminationController::class, 'update'])
                 ->name('admin.examinations.update');
 
-
             Route::patch('/admin/examinations/{examination}/status', [ExaminationController::class, 'changeStatus'])
                 ->name('admin.examinations.change-status');
 
@@ -196,7 +202,16 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
                 ->name('admin.examinations.destroy');
 
 
-            // Examination Question Management
+            // EXAMINER ASSIGNMENTS
+
+            Route::get('/admin/examinations/{examination}/examiners', [ExaminationAssignmentController::class, 'index'])
+                ->name('admin.examinations.examiners.index');
+
+            Route::put('/admin/examinations/{examination}/examiners', [ExaminationAssignmentController::class, 'update'])
+                ->name('admin.examinations.examiners.update');
+
+
+            // EXAMINATION QUESTION MANAGEMENT
 
             Route::get('/admin/examinations/{examination}/questions', [ExaminationQuestionController::class, 'index'])
                 ->name('admin.examinations.questions.index');
@@ -215,6 +230,40 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
 
             Route::put('/admin/examinations/{examination}/questions/{question}', [ExaminationQuestionController::class, 'update'])
                 ->name('admin.examinations.questions.update');
+
+
+            // RESULT APPROVAL MANAGEMENT
+
+            Route::get('/admin/results', [ResultApprovalController::class, 'index'])
+                ->name('admin.results.index');
+
+            Route::get('/admin/results/{result}', [ResultApprovalController::class, 'show'])
+                ->name('admin.results.show');
+
+            Route::post('/admin/results/{result}/approve', [ResultApprovalController::class, 'approve'])
+                ->name('admin.results.approve');
+
+            Route::post('/admin/results/{result}/reject', [ResultApprovalController::class, 'reject'])
+                ->name('admin.results.reject');
+
+
+            // RESULT PIN MANAGEMENT
+
+            Route::get('/admin/result-pins', [ResultPinController::class, 'index'])
+                ->name('admin.result-pins.index');
+
+            Route::get('/admin/result-pins/create', [ResultPinController::class, 'create'])
+                ->name('admin.result-pins.create');
+
+            Route::post('/admin/result-pins', [ResultPinController::class, 'store'])
+                ->name('admin.result-pins.store');
+
+            Route::get('/admin/result-pins/{resultPin}', [ResultPinController::class, 'show'])
+                ->name('admin.result-pins.show');
+
+            Route::post('/admin/result-pins/{resultPin}/revoke', [ResultPinController::class, 'revoke'])
+                ->name('admin.result-pins.revoke');
+
         });
 
 
@@ -224,8 +273,26 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
 
         Route::middleware('role:examiner')->group(function () {
 
-            Route::view('/examiner/dashboard', 'cbt.examiner.dashboard')
+            Route::get('/examiner/dashboard', [ExaminerDashboardController::class, 'index'])
                 ->name('examiner.dashboard');
+
+            Route::get('/examiner/examinations/{examination}/scores', [ExaminerScoreController::class, 'index'])
+                ->name('examiner.examinations.scores.index');
+
+            Route::post(
+                '/examiner/examinations/{examination}/scores/{result}',
+                [ExaminerScoreController::class, 'update']
+            )->name('examiner.examinations.scores.update');
+
+            Route::get(
+                '/examiner/examinations/{examination}/scores/{result}/review',
+                [ExaminerScoreController::class, 'show']
+            )->name('examiner.examinations.scores.review');
+
+            Route::post(
+                '/examiner/examinations/{examination}/scores/{result}/review',
+                [ExaminerScoreController::class, 'review']
+            )->name('examiner.examinations.scores.submit-review');
 
         });
 
@@ -236,15 +303,63 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
 
         Route::middleware('role:student')->group(function () {
 
+            // STUDENT DASHBOARD
+
             Route::view('/student/dashboard', 'cbt.student.dashboard')
                 ->name('student.dashboard');
+
+
+            // STUDENT EXAMINATIONS
+
+            Route::get('/student/examinations', [StudentExaminationController::class, 'index'])
+                ->name('student.examinations.index');
+
+            Route::get('/student/examinations/{examination}', [StudentExaminationController::class, 'show'])
+                ->name('student.examinations.show');
+
+            Route::post('/student/examinations/{examination}/start', [StudentExaminationController::class, 'start'])
+                ->name('student.examinations.start');
+
+            Route::get('/student/examinations/{examination}/attempt', [StudentExaminationController::class, 'attempt'])
+                ->name('student.examinations.attempt');
+
+            Route::post('/student/examinations/{examination}/answer', [StudentExaminationController::class, 'saveAnswer'])
+                ->name('student.examinations.answer');
+
+            Route::post('/student/examinations/{examination}/submit', [StudentExaminationController::class, 'submit'])
+                ->name('student.examinations.submit');
+
+
+            // STUDENT RESULT PIN
+
+            Route::get('/student/result-pin', [StudentResultController::class, 'pinForm'])
+                ->name('student.results.pin');
+
+            Route::post('/student/result-pin', [StudentResultController::class, 'validatePin'])
+                ->middleware('throttle:5,1')
+                ->name('student.results.validate-pin');
+
+            Route::post('/student/result-pin/logout', [StudentResultController::class, 'logoutPin'])
+                ->name('student.results.logout-pin');
+
+
+            // STUDENT APPROVED RESULTS
+
+            Route::get('/student/results', [StudentResultController::class, 'index'])
+                ->name('student.results.index');
+
+            Route::get('/student/results/consolidated', [StudentResultController::class, 'consolidated'])
+                ->name('student.results.consolidated');
+
+            // INDIVIDUAL PRINTABLE RESULT SLIP
+
+            Route::get('/student/results/{result}/print', [StudentResultController::class, 'print'])
+                ->name('student.results.print');
 
         });
 
 
-        // ==================================================
         // CBT LOGOUT
-        // ==================================================
 
         Route::post('/logout', [CbtAuthController::class, 'logout'])
             ->name('logout');

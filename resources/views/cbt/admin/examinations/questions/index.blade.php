@@ -66,15 +66,41 @@
             color: white;
         }
 
-        .table th {
-            background: #f5f5f0;
+        .table-responsive {
+            border: 1px solid #e4ebe7;
+            border-radius: 12px;
+            box-shadow: 0 8px 22px rgba(36, 76, 64, .05);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: #f2f7f4;
             color: #52615a;
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .06em;
             text-transform: uppercase;
+            white-space: nowrap;
+            padding: 15px 16px;
+            border-bottom: 1px solid #e4ebe7;
         }
 
         .table td {
             vertical-align: middle;
+            padding: 15px 16px;
+            color: #35443d;
+            border-color: #edf1ee;
+        }
+
+        .table tbody tr {
+            transition: background-color .18s ease;
+        }
+
+        .table-hover tbody tr:hover > * {
+            background-color: #f7faf8;
         }
 
         .action-buttons {
@@ -247,7 +273,7 @@
 
         <div class="table-responsive">
 
-            <table class="table table-hover">
+            <table class="table table-hover align-middle">
 
                 <thead>
                     <tr>

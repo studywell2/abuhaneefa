@@ -55,20 +55,20 @@
         @if ($contacts->count() > 0)
             <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-[760px] w-full divide-y divide-gray-200">
+                        <thead class="bg-slate-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Phone</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Subject</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Date</th>
-                                <th class="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Phone</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">Subject</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Date</th>
+                                <th class="px-6 py-4 text-right text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @foreach ($contacts as $contact)
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-slate-50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center shrink-0">

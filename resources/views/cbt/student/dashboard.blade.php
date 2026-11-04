@@ -213,6 +213,22 @@
             font-weight: bold;
         }
 
+        .exam-button {
+            display: inline-block;
+            margin-top: 14px;
+            background: var(--navy);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .exam-button:hover {
+            background: var(--blue);
+        }
+
         .notice {
             background: white;
             border: 1px solid #e2e8f0;
@@ -328,7 +344,7 @@
             My Dashboard
         </a>
 
-        <a href="#available-exams" class="nav-item">
+        <a href="{{ route('cbt.student.examinations.index') }}" class="nav-item">
             Available Examinations
         </a>
 
@@ -379,6 +395,7 @@
             <h2 class="section-heading">Your Examination Centre</h2>
 
             <div class="cards">
+
                 <article class="card" id="available-exams">
                     <div class="card-icon">📝</div>
                     <h3>Available Examinations</h3>
@@ -386,7 +403,11 @@
                         View examinations assigned to you, including their
                         instructions, schedules, and duration.
                     </p>
-                    <span class="status">Module in development</span>
+
+                    <a href="{{ route('cbt.student.examinations.index') }}"
+                       class="exam-button">
+                        View Examinations
+                    </a>
                 </article>
 
                 <article class="card">
@@ -440,6 +461,7 @@
                     </p>
                     <span class="status">Account details to be added</span>
                 </article>
+
             </div>
 
             <section class="notice">

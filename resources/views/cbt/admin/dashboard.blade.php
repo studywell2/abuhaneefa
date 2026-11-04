@@ -736,7 +736,7 @@
                     Examinations
                 </a>
 
-                <a href="#results" class="nav-link">
+                <a href="{{ route('cbt.admin.results.index') }}" class="nav-link">
                     <span class="nav-icon">▥</span>
                     Results
                 </a>
@@ -917,53 +917,49 @@
 
 
                 <section class="stats-grid">
-
+                
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">♙</div>
                         </div>
-
-                        <h3>—</h3>
+                
+                        <h3>{{ $registeredStudents }}</h3>
                         <p>Registered Students</p>
-                        <small>Student module statistics pending</small>
+                        <small>Total students registered in the academy's CBT portal</small>
                     </div>
-
-
+                
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">♧</div>
                         </div>
-
-                        <h3>—</h3>
+                
+                        <h3>{{ $registeredExaminers }}</h3>
                         <p>Registered Examiners</p>
-                        <small>Examiner statistics not connected</small>
+                        <small>Total examiner accounts registered in the portal</small>
                     </div>
-
-
+                
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">▤</div>
                         </div>
-
-                        <h3>—</h3>
+                
+                        <h3>{{ $totalExaminations }}</h3>
                         <p>Examinations</p>
-                        <small>Examination module statistics pending</small>
+                        <small>Total examinations created in the portal</small>
                     </div>
-
-
+                
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">▥</div>
                         </div>
-
-                        <h3>—</h3>
+                
+                        <h3>{{ $resultsAwaitingApproval }}</h3>
                         <p>Results Awaiting Approval</p>
-                        <small>Results module not connected</small>
+                        <small>Results waiting for administrator approval</small>
                     </div>
-
+                
                 </section>
-
-
+                
                 <!-- MANAGEMENT CENTRE -->
 
                 <div class="section-heading">
@@ -1035,7 +1031,7 @@
                     </a>
 
 
-                    <a href="#results" class="management-card">
+                    <a href="{{ route('cbt.admin.results.index') }}" class="management-card">
 
                         <div class="management-icon">▥</div>
 
@@ -1047,7 +1043,7 @@
                         </p>
 
                         <div class="management-footer">
-                            <span class="status">Planned</span>
+                            <span class="status available">Available</span>
                             <span class="arrow">→</span>
                         </div>
 

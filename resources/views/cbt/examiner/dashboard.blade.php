@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,9 +21,7 @@
             --border: #E2E8F0;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -31,11 +30,8 @@
             color: var(--text);
         }
 
-        a {
-            text-decoration: none;
-        }
+        a { text-decoration: none; }
 
-        /* TOP NAVIGATION */
         .topnav {
             position: fixed;
             top: 0;
@@ -49,7 +45,7 @@
             justify-content: space-between;
             padding: 12px 30px;
             z-index: 1000;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, .12);
+            box-shadow: 0 3px 12px rgba(0,0,0,.12);
         }
 
         .brand {
@@ -87,9 +83,7 @@
             gap: 5px;
         }
 
-        .nav-item {
-            position: relative;
-        }
+        .nav-item { position: relative; }
 
         .nav-button {
             display: flex;
@@ -103,19 +97,15 @@
             font-size: 13px;
             cursor: pointer;
             font-family: inherit;
-            transition: background .2s ease;
         }
 
         .nav-button:hover,
-        .nav-item:hover>.nav-button {
+        .nav-item:hover > .nav-button {
             background: var(--blue);
             color: white;
         }
 
-        .arrow {
-            font-size: 10px;
-            color: var(--gold);
-        }
+        .arrow { font-size: 10px; color: var(--gold); }
 
         .dropdown {
             display: none;
@@ -126,9 +116,8 @@
             padding: 8px;
             background: white;
             border-radius: 9px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .16);
+            box-shadow: 0 10px 30px rgba(0,0,0,.16);
             z-index: 1100;
-            animation: dropdownIn .18s ease;
         }
 
         .nav-item:hover .dropdown,
@@ -142,7 +131,6 @@
             color: var(--text);
             font-size: 13px;
             border-radius: 6px;
-            transition: background .2s ease, color .2s ease;
         }
 
         .dropdown a:hover {
@@ -150,24 +138,12 @@
             color: var(--navy);
         }
 
-        @keyframes dropdownIn {
-            from {
-                opacity: 0;
-                transform: translateY(7px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .profile {
             display: flex;
             align-items: center;
             gap: 9px;
             padding-left: 15px;
-            border-left: 1px solid rgba(255, 255, 255, .2);
+            border-left: 1px solid rgba(255,255,255,.2);
         }
 
         .avatar {
@@ -191,12 +167,18 @@
         }
 
         .logout {
-            color: #FFE1A0 !important;
-            border-top: 1px solid var(--border);
-            margin-top: 5px;
+            color: #785512 !important;
+            border: 0;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 11px 12px;
         }
 
-        /* MAIN CONTENT */
+        .logout:hover { background: #FFF4D9; }
+
         .main {
             padding-top: 75px;
             min-height: 100vh;
@@ -254,7 +236,7 @@
             position: absolute;
             width: 190px;
             height: 190px;
-            border: 30px solid rgba(255, 255, 255, .06);
+            border: 30px solid rgba(255,255,255,.06);
             border-radius: 50%;
             right: -40px;
             top: -70px;
@@ -262,7 +244,7 @@
 
         .welcome .tag {
             display: inline-block;
-            background: rgba(214, 168, 79, .18);
+            background: rgba(214,168,79,.18);
             color: #FFE1A0;
             padding: 7px 11px;
             border-radius: 20px;
@@ -284,9 +266,7 @@
             margin: 0;
         }
 
-        .section-heading {
-            margin: 30px 0 16px;
-        }
+        .section-heading { margin: 30px 0 16px; }
 
         .section-heading h2 {
             margin: 0;
@@ -302,7 +282,7 @@
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0,1fr));
             gap: 18px;
         }
 
@@ -310,11 +290,6 @@
             background: white;
             border-radius: 11px;
             padding: 22px;
-            transition: transform .2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
         }
 
         .card-icon {
@@ -340,58 +315,133 @@
             color: var(--muted);
         }
 
-        .placeholder {
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .task-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
-        }
-
-        .task {
-            display: block;
+        .table-card {
             background: white;
             border-radius: 11px;
-            padding: 23px;
-            color: var(--text);
-            transition: transform .2s ease, background .2s ease;
+            overflow: hidden;
+            border: 1px solid var(--border);
         }
 
-        .task:hover {
-            transform: translateY(-3px);
-            background: #FCFDFD;
+        .table-responsive { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1080px;
         }
 
-        .task-icon {
-            font-size: 25px;
-            margin-bottom: 13px;
+        th, td {
+            padding: 15px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
         }
 
-        .task h3 {
-            font-size: 15px;
+        th {
+            background: #F7FAFC;
             color: var(--navy);
-            margin: 0 0 9px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
-        .task p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.7;
-            margin: 0;
+        td { color: var(--text); }
+
+        tbody tr:hover { background: #FAFCFD; }
+
+        .exam-title {
+            font-weight: bold;
+            color: var(--navy);
+        }
+
+        .department-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #EAF1F4;
+            color: var(--navy);
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .department-general {
+            background: #FFF4D9;
+            color: #785512;
+        }
+
+        .department-na {
+            background: #EDF0F3;
+            color: #526170;
         }
 
         .status {
             display: inline-block;
-            margin-top: 14px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status-published {
+            background: #E6F5EC;
+            color: #237344;
+        }
+
+        .status-completed {
+            background: #EAF1F8;
+            color: #315C72;
+        }
+
+        .status-draft {
             background: #FFF4D9;
             color: #785512;
-            border-radius: 20px;
-            padding: 6px 10px;
+        }
+
+        .status-other {
+            background: #EDF0F3;
+            color: #526170;
+        }
+
+        .score-link {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 9px 13px;
+            border-radius: 6px;
             font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: background .2s ease;
+        }
+
+        .score-link:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .empty-state {
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .empty-state .icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            color: var(--navy);
+            font-size: 16px;
+            margin: 0 0 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 0;
         }
 
         .notice {
@@ -404,8 +454,11 @@
             line-height: 1.8;
         }
 
-        .notice strong {
-            color: var(--navy);
+        .notice strong { color: var(--navy); }
+
+        .pagination {
+            padding: 18px;
+            border-top: 1px solid var(--border);
         }
 
         .footer {
@@ -417,12 +470,11 @@
             background: white;
         }
 
-        /* MOBILE NAVIGATION */
         .menu-toggle {
             display: none;
             background: transparent;
             color: white;
-            border: 1px solid rgba(255, 255, 255, .3);
+            border: 1px solid rgba(255,255,255,.3);
             border-radius: 6px;
             padding: 8px 11px;
             font-size: 20px;
@@ -435,9 +487,7 @@
                 padding: 12px 18px;
             }
 
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
 
             .nav-links {
                 display: none;
@@ -447,13 +497,9 @@
                 padding-top: 12px;
             }
 
-            .nav-links.open {
-                display: flex;
-            }
+            .nav-links.open { display: flex; }
 
-            .nav-item {
-                width: 100%;
-            }
+            .nav-item { width: 100%; }
 
             .nav-button {
                 width: 100%;
@@ -464,16 +510,7 @@
                 position: static;
                 width: 100%;
                 box-shadow: none;
-                border-radius: 5px;
                 margin: 4px 0 8px;
-            }
-
-            .nav-item:hover .dropdown {
-                display: none;
-            }
-
-            .nav-item:focus-within .dropdown {
-                display: block;
             }
 
             .profile {
@@ -481,9 +518,7 @@
                 padding: 8px 0;
             }
 
-            .cards {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            .cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
         }
 
         @media (max-width: 650px) {
@@ -493,212 +528,271 @@
                 flex-direction: column;
             }
 
-            .content {
-                padding: 20px;
-            }
+            .content { padding: 20px; }
 
-            .cards,
-            .task-grid {
-                grid-template-columns: 1fr;
-            }
+            .cards { grid-template-columns: 1fr; }
 
-            .welcome {
-                padding: 23px;
-            }
+            .welcome { padding: 23px; }
 
-            .welcome h2 {
-                font-size: 21px;
-            }
+            .welcome h2 { font-size: 21px; }
 
-            .footer {
-                padding: 18px 20px;
-            }
+            .footer { padding: 18px 20px; }
         }
     </style>
 </head>
 
 <body>
 
-    <header class="topnav">
-        <div class="brand">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Academy logo">
-            <div>
-                <strong>Abuhaneefah Islamic Academy</strong>
-                <small>EXAMINER PORTAL</small>
+<header class="topnav">
+
+    <div class="brand">
+        <img src="{{ asset('images/logo.jpg') }}" alt="Academy logo">
+        <div>
+            <strong>Abuhaneefah Islamic Academy</strong>
+            <small>EXAMINER PORTAL</small>
+        </div>
+    </div>
+
+    <button class="menu-toggle" type="button" onclick="toggleMenu()">☰</button>
+
+    <nav class="nav-links" id="navLinks">
+
+        <div class="nav-item">
+            <button class="nav-button" type="button">
+                Workspace <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown">
+                <a href="{{ route('cbt.examiner.dashboard') }}">Overview</a>
+                <a href="#examinations">My Examinations</a>
             </div>
         </div>
 
-        <button class="menu-toggle" type="button" onclick="toggleMenu()">☰</button>
-
-        <nav class="nav-links" id="navLinks">
-
-            <div class="nav-item">
-                <button class="nav-button" type="button">
-                    Workspace <span class="arrow">▼</span>
-                </button>
-                <div class="dropdown">
-                    <a href="{{ route('cbt.examiner.dashboard') }}">Overview</a>
-                    <a href="#examinations">My Examinations</a>
-                    <a href="#questions">Question Bank</a>
-                </div>
+        <div class="nav-item">
+            <button class="nav-button" type="button">
+                Examination Activities <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown">
+                <a href="#examinations">Assigned Examinations</a>
             </div>
-
-            <div class="nav-item">
-                <button class="nav-button" type="button">
-                    Examination Activities <span class="arrow">▼</span>
-                </button>
-                <div class="dropdown">
-                    <a href="#examinations">Assigned Examinations</a>
-                    <a href="#questions">Prepare Questions</a>
-                    <a href="#submissions">Student Submissions</a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <button class="nav-button" type="button">
-                    Results <span class="arrow">▼</span>
-                </button>
-                <div class="dropdown">
-                    <a href="#results">Results Review</a>
-                    <a href="#policy">Result Approval Policy</a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <button class="nav-button" type="button">
-                    Account <span class="arrow">▼</span>
-                </button>
-                <div class="dropdown">
-                    <a href="#profile">My Profile</a>
-                    <form method="POST" action="{{ route('cbt.logout') }}">
-                        @csrf
-                        <button type="submit" class="nav-button logout" style="width:100%;text-align:left;">
-                            Sign Out
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </nav>
-
-        <div class="profile" id="profile">
-            <div class="avatar">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-            </div>
-            <span class="profile-name">{{ auth()->user()->name }}</span>
         </div>
+
+        <div class="nav-item">
+            <button class="nav-button" type="button">
+                Account <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown">
+                <form method="POST" action="{{ route('cbt.logout') }}">
+                    @csrf
+                    <button type="submit" class="logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+
+    </nav>
+
+    <div class="profile">
+        <div class="avatar">
+            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+        </div>
+        <span class="profile-name">{{ auth()->user()->name }}</span>
+    </div>
+
+</header>
+
+<main class="main">
+
+    <header class="page-header">
+        <div>
+            <h1>Examiner Workspace</h1>
+            <p>Manage examinations assigned to you.</p>
+        </div>
+        <span class="access-label">EXAMINER ACCESS</span>
     </header>
 
-    <main class="main">
+    <div class="content">
 
-        <header class="page-header">
-            <div>
-                <h1>Examiner Workspace</h1>
-                <p>Prepare and review examinations assigned to you.</p>
-            </div>
-            <span class="access-label">EXAMINER ACCESS</span>
-        </header>
+        <section class="welcome">
+            <span class="tag">EXAMINER ACCESS</span>
+            <h2>Welcome, {{ auth()->user()->name }}!</h2>
+            <p>
+                This is your examination workspace. View your assigned examinations
+                and access submitted student records. You can enter and review
+                scores according to the examination workflow.
+            </p>
+        </section>
 
-        <div class="content">
-
-            <section class="welcome">
-                <span class="tag">EXAMINER ACCESS</span>
-                <h2>Welcome, {{ auth()->user()->name }}!</h2>
-                <p>
-                    Use this workspace to manage assigned examination activities,
-                    prepare questions and review student results. Results will
-                    require administrator approval before release.
-                </p>
-            </section>
-
-            <div class="section-heading">
-                <h2>Your Overview</h2>
-                <p>Examination statistics will appear here when the modules are connected.</p>
-            </div>
-
-            <section class="cards">
-
-                <div class="card" id="examinations">
-                    <div class="card-icon">📝</div>
-                    <h3>—</h3>
-                    <p>Assigned Examinations</p>
-                    <div class="placeholder">Examination assignments not connected yet</div>
-                </div>
-
-                <div class="card" id="questions">
-                    <div class="card-icon">✎</div>
-                    <h3>—</h3>
-                    <p>Questions Prepared</p>
-                    <div class="placeholder">Question bank not connected yet</div>
-                </div>
-
-                <div class="card" id="submissions">
-                    <div class="card-icon">▥</div>
-                    <h3>—</h3>
-                    <p>Submissions to Review</p>
-                    <div class="placeholder">Submission data not connected yet</div>
-                </div>
-
-            </section>
-
-            <div class="section-heading">
-                <h2>Examination Tools</h2>
-                <p>Tools for your assigned examination responsibilities.</p>
-            </div>
-
-            <section class="task-grid">
-
-                <a href="#examinations" class="task">
-                    <div class="task-icon">📚</div>
-                    <h3>My Examinations</h3>
-                    <p>View assigned subjects, examination schedules and exam instructions.</p>
-                    <span class="status">Planned module</span>
-                </a>
-
-                <a href="#questions" class="task">
-                    <div class="task-icon">🗂️</div>
-                    <h3>Question Bank</h3>
-                    <p>Prepare questions, multiple-choice options and correct answers for assigned exams.</p>
-                    <span class="status">Planned module</span>
-                </a>
-
-                <a href="#submissions" class="task">
-                    <div class="task-icon">📋</div>
-                    <h3>Student Submissions</h3>
-                    <p>Review completed examination attempts and check submission records.</p>
-                    <span class="status">Planned module</span>
-                </a>
-
-                <a href="#results" class="task" id="results">
-                    <div class="task-icon">📊</div>
-                    <h3>Results Review</h3>
-                    <p>Review scores and submit results for administrator approval before publication.</p>
-                    <span class="status">Planned module</span>
-                </a>
-
-            </section>
-
-            <div class="notice" id="policy">
-                <strong>Result release policy:</strong>
-                Examiners can prepare and review results, but students must not
-                see results until an authorised administrator approves them.
-            </div>
-
+        <div class="section-heading">
+            <h2>Your Overview</h2>
+            <p>Summary of your examination assignments.</p>
         </div>
 
-        <footer class="footer">
-            © {{ date('Y') }} Abuhaneefah Islamic Academy.
-            CBT Examiner Portal.
-        </footer>
+        <section class="cards">
 
-    </main>
+            <div class="card">
+                <div class="card-icon">📝</div>
+                <h3>{{ $totalAssigned }}</h3>
+                <p>Total Assigned Examinations</p>
+            </div>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('open');
-        }
-    </script>
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3>{{ $publishedExams }}</h3>
+                <p>Published Examinations</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">✓</div>
+                <h3>{{ $completedExams }}</h3>
+                <p>Completed Examinations</p>
+            </div>
+
+        </section>
+
+        <div class="section-heading" id="examinations">
+            <h2>My Assigned Examinations</h2>
+            <p>Only examinations assigned to your account are displayed here.</p>
+        </div>
+
+        <section class="table-card">
+
+            @if($examinations->count() > 0)
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Examination</th>
+                                <th>Subject</th>
+                                <th>Class</th>
+                                <th>Department</th>
+                                <th>Academic Year</th>
+                                <th>Term</th>
+                                <th>Mode</th>
+                                <th>Questions</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach($examinations as $index => $examination)
+
+                                @php
+                                    $statusClass = match($examination->status) {
+                                        'published' => 'status-published',
+                                        'completed' => 'status-completed',
+                                        'draft' => 'status-draft',
+                                        default => 'status-other',
+                                    };
+
+                                    $className = strtoupper(
+                                        $examination->schoolClass->name ?? ''
+                                    );
+
+                                    $isSeniorClass = str_starts_with($className, 'SS');
+                                    $department = $isSeniorClass
+                                        ? ($examination->department ?? 'General')
+                                        : 'Not applicable';
+                                @endphp
+
+                                <tr>
+                                    <td>{{ $examinations->firstItem() + $index }}</td>
+
+                                    <td>
+                                        <span class="exam-title">
+                                            {{ $examination->title }}
+                                        </span>
+                                    </td>
+
+                                    <td>{{ $examination->subject }}</td>
+
+                                    <td>
+                                        {{ $examination->schoolClass->name ?? 'Not specified' }}
+                                    </td>
+
+                                    <td>
+                                        @if($isSeniorClass)
+                                            <span class="department-badge {{ $department === 'General' ? 'department-general' : '' }}">
+                                                {{ $department }}
+                                            </span>
+                                        @else
+                                            <span class="department-badge department-na">
+                                                Not applicable
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $examination->academic_year }}</td>
+
+                                    <td>{{ $examination->term }}</td>
+
+                                    <td>{{ ucfirst($examination->mode) }}</td>
+
+                                    <td>{{ $examination->questions_count }}</td>
+
+                                    <td>
+                                        <span class="status {{ $statusClass }}">
+                                            {{ str_replace('_', ' ', $examination->status) }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="{{ route('cbt.examiner.examinations.scores.index', $examination) }}"
+                                            class="score-link"
+                                        >
+                                            View Student Scores
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    {{ $examinations->links() }}
+                </div>
+
+            @else
+
+                <div class="empty-state">
+                    <div class="icon">📚</div>
+                    <h3>No Examinations Assigned Yet</h3>
+                    <p>
+                        You currently have no examination assignments.
+                        Please contact the administrator if you believe
+                        an examination should have been assigned to you.
+                    </p>
+                </div>
+
+            @endif
+
+        </section>
+
+        <div class="notice">
+            <strong>Result release policy:</strong>
+            Examiners may enter and review assigned examination scores.
+            However, students must not see their results until an authorised
+            administrator has approved them.
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        © {{ date('Y') }} Abuhaneefah Islamic Academy.
+        CBT Examiner Portal.
+    </footer>
+
+</main>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('open');
+    }
+</script>
 
 </body>
-
 </html>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -184,24 +183,36 @@
         .table {
             margin: 0;
             white-space: nowrap;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-responsive {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(23, 59, 77, .05);
         }
 
         .table thead th {
-            background: #f8fafb;
-            color: #596579;
+            background: #f2f6f8;
+            color: #536575;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .3px;
-            padding: 13px 15px;
+            letter-spacing: .06em;
+            padding: 15px 16px;
             border-bottom: 1px solid var(--border);
         }
 
         .table tbody td {
-            padding: 15px;
+            padding: 16px;
             vertical-align: middle;
             font-size: 13px;
             border-color: #edf0f2;
+        }
+
+        .table-hover tbody tr:hover > * {
+            background-color: #f7fafb;
         }
 
         .exam-title {
@@ -471,12 +482,13 @@
 
             <div class="table-responsive">
 
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
 
                     <thead>
                         <tr>
                             <th>Examination</th>
                             <th>Class</th>
+                            <th>Department</th>
                             <th>Academic Year</th>
                             <th>Term</th>
                             <th>Duration</th>
@@ -505,6 +517,23 @@
 
                                 <td>
                                     {{ $examination->schoolClass?->name ?? 'Class unavailable' }}
+                                </td>
+
+                                <!-- Department -->
+                                <td>
+                                    @if (str_starts_with($examination->schoolClass?->name ?? '', 'SS'))
+                                        @if ($examination->department)
+                                            <span class="badge bg-primary">
+                                                {{ $examination->department }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary">
+                                                General
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">Not applicable</span>
+                                    @endif
                                 </td>
 
                                 <td>{{ $examination->academic_year }}</td>
@@ -581,6 +610,13 @@
                                             Questions
                                         </a>
 
+                                        <!-- Assign Examiners -->
+                                        <a href="{{ route('cbt.admin.examinations.examiners.index', $examination) }}"
+                                            class="btn btn-sm btn-outline-info" title="Assign examiners">
+                                            <i class="bi bi-person-check"></i>
+                                            Assign Examiners
+                                        </a>
+
                                         <!-- Edit Examination -->
                                         <a href="{{ route('cbt.admin.examinations.edit', $examination) }}"
                                             class="btn btn-sm btn-outline-secondary" title="Edit examination">
@@ -613,7 +649,7 @@
                         @empty
 
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
 
                                     <div class="empty-state">
 

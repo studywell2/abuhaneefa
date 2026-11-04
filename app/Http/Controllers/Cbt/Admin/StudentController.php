@@ -33,6 +33,12 @@ class StudentController extends Controller
                         });
                 });
             })
+            ->when($request->filled('department'), function ($query) use ($request) {
+                $query->where('department', $request->input('department'));
+            })
+            ->when($request->filled('school_class_id'), function ($query) use ($request) {
+                $query->where('school_class_id', $request->input('school_class_id'));
+            })
             ->orderBy('last_name')
             ->orderBy('first_name')
             ->paginate(15)
@@ -42,7 +48,12 @@ class StudentController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('cbt.admin.students.index', compact('students', 'classes'));
+        $departments = ['Science', 'Arts', 'Commercial'];
+
+        return view(
+            'cbt.admin.students.index',
+            compact('students', 'classes', 'departments')
+        );
     }
 
     /**
@@ -81,6 +92,12 @@ class StudentController extends Controller
                     ->where('is_active', true),
             ],
 
+            'department' => [
+                'nullable',
+                'string',
+                Rule::in(['Science', 'Arts', 'Commercial']),
+            ],
+
             'date_of_birth' => [
                 'nullable',
                 'date',
@@ -96,16 +113,31 @@ class StudentController extends Controller
             'guardian_phone' => ['nullable', 'string', 'max:30'],
         ]);
 
-        // Generate a temporary password for the new student.
-        $temporaryPassword = Str::random(24);
-
-        // Get the selected class.
         $schoolClass = SchoolClass::findOrFail(
             $validated['school_class_id']
         );
 
-        // Create the account and student profile together.
-        $student = DB::transaction(function () use ($validated, $schoolClass, $temporaryPassword) {
+        if (str_starts_with($schoolClass->name, 'SS') && empty($validated['department'])) {
+            return back()
+                ->withErrors([
+                    'department' => 'Please select a department for Senior Secondary students.',
+                ])
+                ->withInput();
+        }
+
+        if (str_starts_with($schoolClass->name, 'JSS')) {
+            $validated['department'] = null;
+        }
+
+        $temporaryPassword = Str::random(24);
+        $year = now()->year;
+
+        $student = DB::transaction(function () use (
+            $validated,
+            $schoolClass,
+            $temporaryPassword,
+            $year
+        ) {
             $fullName = trim(implode(' ', array_filter([
                 $validated['first_name'],
                 $validated['other_names'] ?? null,
@@ -119,20 +151,16 @@ class StudentController extends Controller
                 'role' => 'student',
             ]);
 
-            // Use a temporary unique value until the student ID exists.
-            $year = now()->year;
-
             $student = Student::create([
                 'user_id' => $user->id,
                 'school_class_id' => $schoolClass->id,
+                'department' => $validated['department'] ?? null,
                 'admission_number' => 'AHIA-' . $year
                     . '-PENDING-' . Str::uuid(),
 
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'other_names' => $validated['other_names'] ?? null,
-
-                // Keep this field populated for compatibility.
                 'class_name' => $schoolClass->name,
 
                 'date_of_birth' => $validated['date_of_birth'] ?? null,
@@ -142,7 +170,6 @@ class StudentController extends Controller
                 'is_active' => true,
             ]);
 
-            // Generate the final unique admission number.
             $student->admission_number = 'AHIA-' . $year . '-'
                 . str_pad((string) $student->id, 4, '0', STR_PAD_LEFT);
 
@@ -151,7 +178,6 @@ class StudentController extends Controller
             return $student;
         });
 
-        // Display the temporary password once after successful creation.
         return redirect()
             ->route('cbt.admin.students.index')
             ->with('created_student_credentials', [
@@ -212,7 +238,6 @@ class StudentController extends Controller
             'email' => [
                 'required',
                 'email',
-                'max:255',
                 Rule::unique('users', 'email')->ignore($student->user_id),
             ],
 
@@ -221,6 +246,12 @@ class StudentController extends Controller
                 'integer',
                 Rule::exists('school_classes', 'id')
                     ->where('is_active', true),
+            ],
+
+            'department' => [
+                'nullable',
+                'string',
+                Rule::in(['Science', 'Arts', 'Commercial']),
             ],
 
             'date_of_birth' => [
@@ -242,6 +273,18 @@ class StudentController extends Controller
             $validated['school_class_id']
         );
 
+        if (str_starts_with($schoolClass->name, 'SS') && empty($validated['department'])) {
+            return back()
+                ->withErrors([
+                    'department' => 'Please select a department for Senior Secondary students.',
+                ])
+                ->withInput();
+        }
+
+        if (str_starts_with($schoolClass->name, 'JSS')) {
+            $validated['department'] = null;
+        }
+
         DB::transaction(function () use ($validated, $student, $schoolClass) {
             $fullName = trim(implode(' ', array_filter([
                 $validated['first_name'],
@@ -256,6 +299,7 @@ class StudentController extends Controller
 
             $student->update([
                 'school_class_id' => $schoolClass->id,
+                'department' => $validated['department'] ?? null,
                 'class_name' => $schoolClass->name,
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
@@ -306,8 +350,8 @@ class StudentController extends Controller
             ->with(
                 'success',
                 $student->is_active
-                ? 'Student account activated successfully.'
-                : 'Student account deactivated successfully.'
+                    ? 'Student account activated successfully.'
+                    : 'Student account deactivated successfully.'
             );
     }
 
@@ -322,6 +366,7 @@ class StudentController extends Controller
             'other_names',
             'email',
             'class_name',
+            'department',
             'date_of_birth',
             'gender',
             'guardian_name',
@@ -331,16 +376,15 @@ class StudentController extends Controller
         return response()->streamDownload(function () use ($headers) {
             $file = fopen('php://output', 'w');
 
-            // Add the column headings.
             fputcsv($file, $headers);
 
-            // Add one example row.
             fputcsv($file, [
                 'Aisha',
                 'Abdullahi',
                 'Fatima',
                 'aisha@example.com',
                 'SS1',
+                'Science',
                 '2010-05-15',
                 'Female',
                 'Abdullahi Musa',
@@ -353,7 +397,6 @@ class StudentController extends Controller
         ]);
     }
 
-    
     /**
      * Import multiple students from a CSV file.
      */
@@ -382,7 +425,6 @@ class StudentController extends Controller
             return back()->with('error', 'The uploaded CSV file is empty.');
         }
 
-        // Remove spaces and the UTF-8 BOM from column headings.
         $headers = array_map(function ($header) {
             return strtolower(trim((string) $header));
         }, $headers);
@@ -420,7 +462,6 @@ class StudentController extends Controller
         while (($values = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
             $rowNumber++;
 
-            // Skip completely empty rows.
             if (count(array_filter($values, fn ($value) => trim((string) $value) !== '')) === 0) {
                 continue;
             }
@@ -441,6 +482,11 @@ class StudentController extends Controller
                 'other_names' => ['nullable', 'string', 'max:100'],
                 'email' => ['required', 'email', 'max:255'],
                 'class_name' => ['required', 'string', 'max:30'],
+                'department' => [
+                    'nullable',
+                    'string',
+                    Rule::in(['Science', 'Arts', 'Commercial']),
+                ],
                 'date_of_birth' => ['nullable', 'date', 'before_or_equal:today'],
                 'gender' => ['nullable', Rule::in(['Male', 'Female'])],
                 'guardian_name' => ['nullable', 'string', 'max:255'],
@@ -476,12 +522,25 @@ class StudentController extends Controller
                 continue;
             }
 
+            $schoolClass = $classes->get($classKey);
+            $department = $row['department'] ?? '';
+
+            if (str_starts_with($schoolClass->name, 'SS') && !in_array($department, ['Science', 'Arts', 'Commercial'], true)) {
+                $errors[] = "Row {$rowNumber}: A valid department (Science, Arts or Commercial) is required for {$schoolClass->name}.";
+                continue;
+            }
+
+            if (str_starts_with($schoolClass->name, 'JSS')) {
+                $department = null;
+            }
+
             $records[] = [
                 'first_name' => $row['first_name'],
                 'last_name' => $row['last_name'],
                 'other_names' => $row['other_names'] ?: null,
                 'email' => $row['email'],
-                'school_class' => $classes->get($classKey),
+                'school_class' => $schoolClass,
+                'department' => $department ?: null,
                 'date_of_birth' => $row['date_of_birth'] ?: null,
                 'gender' => $row['gender'] ?: null,
                 'guardian_name' => $row['guardian_name'] ?: null,
@@ -495,12 +554,10 @@ class StudentController extends Controller
             $errors[] = 'No student records were found in the uploaded file.';
         }
 
-        // Do not import anything if even one row is invalid.
         if (!empty($errors)) {
             return back()->with('import_errors', $errors);
         }
 
-        // Create all accounts and profiles in one database transaction.
         DB::transaction(function () use ($records, &$credentials) {
             foreach ($records as $record) {
                 $temporaryPassword = Str::random(24);
@@ -523,6 +580,7 @@ class StudentController extends Controller
                 $student = Student::create([
                     'user_id' => $user->id,
                     'school_class_id' => $record['school_class']->id,
+                    'department' => $record['department'],
                     'admission_number' => 'AHIA-' . $year
                         . '-PENDING-' . Str::uuid(),
                     'first_name' => $record['first_name'],
@@ -550,7 +608,6 @@ class StudentController extends Controller
             }
         });
 
-        // Download the login details for the successfully imported students.
         return response()->streamDownload(function () use ($credentials) {
             $output = fopen('php://output', 'w');
 
@@ -570,5 +627,4 @@ class StudentController extends Controller
             'Content-Type' => 'text/csv',
         ]);
     }
-
 }

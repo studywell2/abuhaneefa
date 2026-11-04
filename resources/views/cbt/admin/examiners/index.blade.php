@@ -605,31 +605,36 @@
             width: 100%;
             overflow-x: auto;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(23, 59, 77, .05);
         }
 
         table {
             width: 100%;
             min-width: 850px;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         th {
-            padding: 15px 13px;
+            padding: 15px 14px;
             text-align: left;
-            background: #f3f7f8;
-            color: #60717c;
+            background: #f1f6f8;
+            color: #536575;
             font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .5px;
+            letter-spacing: .06em;
             white-space: nowrap;
+            border-bottom: 1px solid var(--border);
         }
 
         td {
-            padding: 16px 13px;
+            padding: 15px 14px;
             border-bottom: 1px solid #edf1f3;
             font-size: 13px;
             vertical-align: middle;
+            color: #354653;
         }
 
         tbody tr {
@@ -637,7 +642,7 @@
         }
 
         tbody tr:hover {
-            background: #f5fafc;
+            background: #f6fafb;
         }
 
         tbody tr:last-child td {

@@ -190,6 +190,12 @@
             color: #c62828;
         }
 
+        .help-text {
+            color: #78879a;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
         @media (max-width: 650px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -257,8 +263,8 @@
             <div class="form-grid">
 
                 <div class="form-group">
-                    <label>First Name <span class="required">*</span></label>
-                    <input type="text" name="first_name"
+                    <label for="first_name">First Name <span class="required">*</span></label>
+                    <input type="text" id="first_name" name="first_name"
                            value="{{ old('first_name', $student->first_name) }}"
                            required>
                     @error('first_name')
@@ -267,8 +273,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Last Name <span class="required">*</span></label>
-                    <input type="text" name="last_name"
+                    <label for="last_name">Last Name <span class="required">*</span></label>
+                    <input type="text" id="last_name" name="last_name"
                            value="{{ old('last_name', $student->last_name) }}"
                            required>
                     @error('last_name')
@@ -277,8 +283,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Other Names</label>
-                    <input type="text" name="other_names"
+                    <label for="other_names">Other Names</label>
+                    <input type="text" id="other_names" name="other_names"
                            value="{{ old('other_names', $student->other_names) }}">
                     @error('other_names')
                         <span class="error">{{ $message }}</span>
@@ -286,34 +292,70 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Admission Number</label>
-                    <input type="text"
+                    <label for="admission_number">Admission Number</label>
+                    <input type="text" id="admission_number"
                            value="{{ $student->admission_number }}"
                            disabled>
-                    <small style="color:#78879a;font-size:12px;">
+                    <small class="help-text">
                         Admission number cannot be changed here.
                     </small>
                 </div>
 
                 <div class="form-group">
-                    <label>Class <span class="required">*</span></label>
-                    <select name="school_class_id" required>
+                    <label for="school_class_id">Class <span class="required">*</span></label>
+
+                    <select name="school_class_id" id="school_class_id" required>
                         <option value="">Select class</option>
+
                         @foreach($classes as $class)
-                            <option value="{{ $class->id }}"
+                            <option
+                                value="{{ $class->id }}"
+                                data-class-name="{{ $class->name }}"
                                 {{ (string) old('school_class_id', $student->school_class_id) === (string) $class->id ? 'selected' : '' }}>
                                 {{ $class->name }}
                             </option>
                         @endforeach
                     </select>
+
                     @error('school_class_id')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
 
+                <div class="form-group" id="departmentGroup" style="display:none;">
+                    <label for="department">Department <span class="required">*</span></label>
+
+                    <select name="department" id="department" disabled>
+                        <option value="">Select department</option>
+
+                        <option value="Science"
+                            {{ old('department', $student->department) === 'Science' ? 'selected' : '' }}>
+                            Science
+                        </option>
+
+                        <option value="Arts"
+                            {{ old('department', $student->department) === 'Arts' ? 'selected' : '' }}>
+                            Arts
+                        </option>
+
+                        <option value="Commercial"
+                            {{ old('department', $student->department) === 'Commercial' ? 'selected' : '' }}>
+                            Commercial
+                        </option>
+                    </select>
+
+                    <span class="help-text">
+                        Required for Senior Secondary students only.
+                    </span>
+
+                    @error('department')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <div class="form-group">
-                    <label>Date of Birth</label>
-                    <input type="date" name="date_of_birth"
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth"
                            value="{{ old('date_of_birth', $student->date_of_birth?->format('Y-m-d')) }}">
                     @error('date_of_birth')
                         <span class="error">{{ $message }}</span>
@@ -321,18 +363,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Gender</label>
-                    <select name="gender">
+                    <label for="gender">Gender</label>
+                    <select name="gender" id="gender">
                         <option value="">Select gender</option>
+
                         <option value="Male"
                             {{ old('gender', $student->gender) === 'Male' ? 'selected' : '' }}>
                             Male
                         </option>
+
                         <option value="Female"
                             {{ old('gender', $student->gender) === 'Female' ? 'selected' : '' }}>
                             Female
                         </option>
                     </select>
+
                     @error('gender')
                         <span class="error">{{ $message }}</span>
                     @enderror
@@ -346,10 +391,12 @@
 
             <div class="form-grid">
                 <div class="form-group full">
-                    <label>Email Address <span class="required">*</span></label>
-                    <input type="email" name="email"
+                    <label for="email">Email Address <span class="required">*</span></label>
+
+                    <input type="email" id="email" name="email"
                            value="{{ old('email', $student->user?->email) }}"
                            required>
+
                     @error('email')
                         <span class="error">{{ $message }}</span>
                     @enderror
@@ -362,8 +409,8 @@
 
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Guardian Name</label>
-                    <input type="text" name="guardian_name"
+                    <label for="guardian_name">Guardian Name</label>
+                    <input type="text" id="guardian_name" name="guardian_name"
                            value="{{ old('guardian_name', $student->guardian_name) }}">
                     @error('guardian_name')
                         <span class="error">{{ $message }}</span>
@@ -371,8 +418,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Guardian Phone Number</label>
-                    <input type="text" name="guardian_phone"
+                    <label for="guardian_phone">Guardian Phone Number</label>
+                    <input type="text" id="guardian_phone" name="guardian_phone"
                            value="{{ old('guardian_phone', $student->guardian_phone) }}">
                     @error('guardian_phone')
                         <span class="error">{{ $message }}</span>
@@ -395,6 +442,34 @@
     </form>
 
 </main>
+
+<script>
+    const classSelect = document.getElementById('school_class_id');
+    const departmentGroup = document.getElementById('departmentGroup');
+    const departmentSelect = document.getElementById('department');
+
+    function updateDepartmentField() {
+        const selectedOption = classSelect.options[classSelect.selectedIndex];
+
+        const className = selectedOption
+            ? selectedOption.dataset.className || ''
+            : '';
+
+        const isSeniorSecondary = /^SS[1-3]$/i.test(className.trim());
+
+        departmentGroup.style.display = isSeniorSecondary ? 'flex' : 'none';
+        departmentSelect.disabled = !isSeniorSecondary;
+        departmentSelect.required = isSeniorSecondary;
+
+        if (!isSeniorSecondary) {
+            departmentSelect.value = '';
+        }
+    }
+
+    classSelect.addEventListener('change', updateDepartmentField);
+
+    updateDepartmentField();
+</script>
 
 </body>
 </html>
