@@ -33,14 +33,6 @@ class ScoreController extends Controller
     /**
      * Restrict attempts to students whose class and department
      * are eligible for the examination.
-     *
-     * Senior general examinations (department = null) accept
-     * all students in the same senior class.
-     *
-     * Departmental senior examinations accept only matching
-     * departments.
-     *
-     * Junior examinations do not use departments.
      */
     private function applyEligibleStudents(
         $query,
@@ -114,6 +106,10 @@ class ScoreController extends Controller
 
     /**
      * Display submitted student attempts.
+     *
+     * task=entry displays results awaiting score entry.
+     * task=review displays results awaiting examiner review.
+     * Without a task filter, all submitted eligible attempts are displayed.
      */
     public function index(Request $request, Examination $examination)
     {
@@ -121,22 +117,45 @@ class ScoreController extends Controller
 
         $examination->loadMissing('schoolClass');
 
+        $task = $request->query('task');
+
+        if (!in_array($task, ['entry', 'review'], true)) {
+            $task = null;
+        }
+
         $attemptsQuery = $examination->attempts()
             ->with(['student', 'result'])
             ->whereNotNull('submitted_at');
 
+        // Preserve class and department eligibility restrictions.
         $this->applyEligibleStudents(
             $attemptsQuery,
             $examination
         );
 
+        // Show only results awaiting score entry.
+        if ($task === 'entry') {
+            $attemptsQuery->whereHas('result', function ($query) {
+                $query->where('status', 'awaiting_scores');
+            });
+        }
+
+        // Show only results awaiting examiner review.
+        if ($task === 'review') {
+            $attemptsQuery->whereHas('result', function ($query) {
+                $query->where('status', 'pending_review');
+            });
+        }
+
         $attempts = $attemptsQuery
             ->latest('submitted_at')
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
         return view('cbt.examiner.scores.index', compact(
             'examination',
-            'attempts'
+            'attempts',
+            'task'
         ));
     }
 

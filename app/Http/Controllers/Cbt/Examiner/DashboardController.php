@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Cbt\Examiner;
 
 use App\Http\Controllers\Controller;
-use App\Models\Examination;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -12,13 +11,40 @@ class DashboardController extends Controller
     {
         $examiner = $request->user();
 
-        // Retrieve only examinations assigned to this examiner.
-        $examinations = $examiner->assignedExaminations()
-            ->with('schoolClass')
-            ->withCount('questions')
-            ->latest('examinations.created_at')
-            ->paginate(10);
+        // Identify the selected score-management task.
+        $scoreTask = $request->query('score_task');
 
+        // Start with examinations assigned to this examiner only.
+        $examinationsQuery = $examiner->assignedExaminations()
+            ->with('schoolClass')
+            ->withCount('questions');
+
+        // Filter examinations with student records awaiting score entry.
+        if ($scoreTask === 'entry') {
+            $examinationsQuery->whereHas('attempts', function ($query) {
+                $query->whereNotNull('submitted_at')
+                    ->whereHas('result', function ($resultQuery) {
+                        $resultQuery->where('status', 'awaiting_scores');
+                    });
+            });
+        }
+
+        // Filter examinations with scores awaiting examiner review.
+        if ($scoreTask === 'review') {
+            $examinationsQuery->whereHas('attempts', function ($query) {
+                $query->whereNotNull('submitted_at')
+                    ->whereHas('result', function ($resultQuery) {
+                        $resultQuery->where('status', 'pending_review');
+                    });
+            });
+        }
+
+        $examinations = $examinationsQuery
+            ->latest('examinations.created_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Existing dashboard statistics remain unchanged.
         $totalAssigned = $examiner->assignedExaminations()->count();
 
         $publishedExams = $examiner->assignedExaminations()
@@ -33,7 +59,8 @@ class DashboardController extends Controller
             'examinations',
             'totalAssigned',
             'publishedExams',
-            'completedExams'
+            'completedExams',
+            'scoreTask'
         ));
     }
 }

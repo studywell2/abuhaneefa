@@ -11,6 +11,7 @@ use App\Services\ResultPinService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ResultPinController extends Controller
 {
@@ -36,61 +37,60 @@ class ResultPinController extends Controller
     /**
      * Display the form for issuing a result PIN.
      */
-    /**
- * Display the form for issuing a result PIN.
- */
-public function create()
-{
-    $students = Student::with('schoolClass')
-        ->where('is_active', true)
-        ->orderBy('first_name')
-        ->get();
+    public function create()
+    {
+        $students = Student::with('schoolClass')
+            ->where('is_active', true)
+            ->orderBy('first_name')
+            ->get();
 
-    // Get academic years already used for examinations.
-    $academicYears = Examination::query()
-        ->whereNotNull('academic_year')
-        ->distinct()
-        ->pluck('academic_year')
-        ->filter(function ($year) {
-            return preg_match('/^(\d{4})\/(\d{4})$/', $year);
-        })
-        ->unique()
-        ->values()
-        ->all();
+        // Get academic years already used for examinations.
+        $academicYears = Examination::query()
+            ->whereNotNull('academic_year')
+            ->distinct()
+            ->pluck('academic_year')
+            ->filter(function ($year) {
+                return preg_match('/^(\d{4})\/(\d{4})$/', $year);
+            })
+            ->unique()
+            ->values()
+            ->all();
 
-    // Sort academic years chronologically.
-    usort($academicYears, function ($a, $b) {
-        return (int) substr($a, 0, 4)
-            <=> (int) substr($b, 0, 4);
-    });
+        // Sort academic years chronologically.
+        usort($academicYears, function ($a, $b) {
+            return (int) substr($a, 0, 4)
+                <=> (int) substr($b, 0, 4);
+        });
 
-    // Include the next academic year automatically.
-    if (!empty($academicYears)) {
-        $latestYear = end($academicYears);
+        // Include the next academic year automatically.
+        if (!empty($academicYears)) {
+            $latestYear = end($academicYears);
             $startYear = (int) substr($latestYear, 5, 4);
-    } else {
-        $startYear = now()->month >= 8
-            ? now()->year
-            : now()->year - 1;
+        } else {
+            $startYear = now()->month >= 8
+                ? now()->year
+                : now()->year - 1;
+        }
+
+        $nextAcademicYear = $startYear . '/' . ($startYear + 1);
+
+        if (!in_array($nextAcademicYear, $academicYears, true)) {
+            $academicYears[] = $nextAcademicYear;
+        }
+
+        $terms = [
+            'First',
+            'Second',
+            'Third',
+        ];
+
+        return view(
+            'cbt.admin.result-pins.create',
+            compact('students', 'academicYears', 'terms')
+        );
     }
 
-    $nextAcademicYear = $startYear . '/' . ($startYear + 1);
-
-    if (!in_array($nextAcademicYear, $academicYears, true)) {
-        $academicYears[] = $nextAcademicYear;
-    }
-
-    $terms = [
-        'First',
-        'Second',
-        'Third',
-    ];
-
-    return view(
-        'cbt.admin.result-pins.create',
-        compact('students', 'academicYears', 'terms')
-    );
-}    /**
+    /**
      * Record payment and issue a result PIN.
      */
     public function store(
@@ -187,6 +187,19 @@ public function create()
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            // Prevent issuing another PIN while one is already active.
+            $hasActivePin = ResultPin::where('student_id', $student->id)
+                ->where('status', 'active')
+                ->exists();
+
+            if ($hasActivePin) {
+                throw ValidationException::withMessages([
+                    'student_id' =>
+                        'This student already has an active Result PIN. Revoke the existing PIN before issuing another one.',
+                ]);
+            }
+
+            // Generate a unique secure PIN.
             do {
                 $plainPin = $pinService->generatePin();
                 $pinHash = $pinService->hashPin($plainPin);
@@ -194,6 +207,7 @@ public function create()
                 ResultPin::where('pin_hash', $pinHash)->exists()
             );
 
+            // Create the Result PIN.
             $resultPin = ResultPin::create([
                 'student_id' => $student->id,
                 'pin_hash' => $pinHash,
@@ -206,6 +220,7 @@ public function create()
                 'status' => 'active',
             ]);
 
+            // Record the payment in the same transaction.
             ResultPinPayment::create([
                 'student_id' => $student->id,
                 'result_pin_id' => $resultPin->id,

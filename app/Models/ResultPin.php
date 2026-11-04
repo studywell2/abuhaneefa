@@ -23,6 +23,10 @@ class ResultPin extends Model
         'revocation_reason',
     ];
 
+    protected $hidden = [
+        'pin_hash',
+    ];
+
     protected function casts(): array
     {
         return [

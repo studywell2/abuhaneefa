@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +20,9 @@
             --border: #E2E8F0;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -30,7 +31,9 @@
             color: var(--text);
         }
 
-        a { text-decoration: none; }
+        a {
+            text-decoration: none;
+        }
 
         .topnav {
             position: fixed;
@@ -83,7 +86,9 @@
             gap: 5px;
         }
 
-        .nav-item { position: relative; }
+        .nav-item {
+            position: relative;
+        }
 
         .nav-button {
             display: flex;
@@ -105,7 +110,10 @@
             color: white;
         }
 
-        .arrow { font-size: 10px; color: var(--gold); }
+        .arrow {
+            font-size: 10px;
+            color: var(--gold);
+        }
 
         .dropdown {
             display: none;
@@ -177,7 +185,9 @@
             padding: 11px 12px;
         }
 
-        .logout:hover { background: #FFF4D9; }
+        .logout:hover {
+            background: #FFF4D9;
+        }
 
         .main {
             padding-top: 75px;
@@ -266,7 +276,9 @@
             margin: 0;
         }
 
-        .section-heading { margin: 30px 0 16px; }
+        .section-heading {
+            margin: 30px 0 16px;
+        }
 
         .section-heading h2 {
             margin: 0;
@@ -322,7 +334,9 @@
             border: 1px solid var(--border);
         }
 
-        .table-responsive { overflow-x: auto; }
+        .table-responsive {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
@@ -345,9 +359,13 @@
             letter-spacing: .4px;
         }
 
-        td { color: var(--text); }
+        td {
+            color: var(--text);
+        }
 
-        tbody tr:hover { background: #FAFCFD; }
+        tbody tr:hover {
+            background: #FAFCFD;
+        }
 
         .exam-title {
             font-weight: bold;
@@ -421,6 +439,28 @@
             color: white;
         }
 
+        .filter-notice {
+            background: #EAF1F4;
+            border-left: 4px solid var(--blue);
+            padding: 16px 19px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .filter-notice strong {
+            color: var(--navy);
+        }
+
+        .clear-filter {
+            display: inline-block;
+            margin-top: 8px;
+            color: var(--navy);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
         .empty-state {
             padding: 45px 20px;
             text-align: center;
@@ -454,7 +494,9 @@
             line-height: 1.8;
         }
 
-        .notice strong { color: var(--navy); }
+        .notice strong {
+            color: var(--navy);
+        }
 
         .pagination {
             padding: 18px;
@@ -487,7 +529,9 @@
                 padding: 12px 18px;
             }
 
-            .menu-toggle { display: block; }
+            .menu-toggle {
+                display: block;
+            }
 
             .nav-links {
                 display: none;
@@ -497,9 +541,13 @@
                 padding-top: 12px;
             }
 
-            .nav-links.open { display: flex; }
+            .nav-links.open {
+                display: flex;
+            }
 
-            .nav-item { width: 100%; }
+            .nav-item {
+                width: 100%;
+            }
 
             .nav-button {
                 width: 100%;
@@ -518,7 +566,9 @@
                 padding: 8px 0;
             }
 
-            .cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            .cards {
+                grid-template-columns: repeat(2,minmax(0,1fr));
+            }
         }
 
         @media (max-width: 650px) {
@@ -528,15 +578,25 @@
                 flex-direction: column;
             }
 
-            .content { padding: 20px; }
+            .content {
+                padding: 20px;
+            }
 
-            .cards { grid-template-columns: 1fr; }
+            .cards {
+                grid-template-columns: 1fr;
+            }
 
-            .welcome { padding: 23px; }
+            .welcome {
+                padding: 23px;
+            }
 
-            .welcome h2 { font-size: 21px; }
+            .welcome h2 {
+                font-size: 21px;
+            }
 
-            .footer { padding: 18px 20px; }
+            .footer {
+                padding: 18px 20px;
+            }
         }
     </style>
 </head>
@@ -547,6 +607,7 @@
 
     <div class="brand">
         <img src="{{ asset('images/logo.jpg') }}" alt="Academy logo">
+
         <div>
             <strong>Abuhaneefah Islamic Academy</strong>
             <small>EXAMINER PORTAL</small>
@@ -557,63 +618,101 @@
 
     <nav class="nav-links" id="navLinks">
 
+        {{-- DASHBOARD --}}
         <div class="nav-item">
             <button class="nav-button" type="button">
-                Workspace <span class="arrow">▼</span>
+                Dashboard <span class="arrow">▼</span>
             </button>
+
             <div class="dropdown">
-                <a href="{{ route('cbt.examiner.dashboard') }}">Overview</a>
-                <a href="#examinations">My Examinations</a>
+                <a href="{{ route('cbt.examiner.dashboard') }}">
+                    Overview
+                </a>
             </div>
         </div>
 
+        {{-- ASSIGNED EXAMINATIONS --}}
         <div class="nav-item">
             <button class="nav-button" type="button">
-                Examination Activities <span class="arrow">▼</span>
+                My Examinations <span class="arrow">▼</span>
             </button>
+
             <div class="dropdown">
-                <a href="#examinations">Assigned Examinations</a>
+                <a href="{{ route('cbt.examiner.dashboard') }}#examinations">
+                    Assigned Examinations
+                </a>
             </div>
         </div>
 
+        {{-- SCORE MANAGEMENT --}}
+        <div class="nav-item">
+            <button class="nav-button" type="button">
+                Score Management <span class="arrow">▼</span>
+            </button>
+
+            <div class="dropdown">
+                <a href="{{ route('cbt.examiner.dashboard', ['score_task' => 'entry']) }}#examinations">
+                    Enter Student Scores
+                </a>
+
+                <a href="{{ route('cbt.examiner.dashboard', ['score_task' => 'review']) }}#examinations">
+                    Review &amp; Submit Scores
+                </a>
+            </div>
+        </div>
+
+        {{-- ACCOUNT --}}
         <div class="nav-item">
             <button class="nav-button" type="button">
                 Account <span class="arrow">▼</span>
             </button>
+
             <div class="dropdown">
                 <form method="POST" action="{{ route('cbt.logout') }}">
                     @csrf
-                    <button type="submit" class="logout">Sign Out</button>
+
+                    <button type="submit" class="logout">
+                        Sign Out
+                    </button>
                 </form>
             </div>
         </div>
 
     </nav>
 
+    {{-- EXAMINER PROFILE --}}
     <div class="profile">
         <div class="avatar">
             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
         </div>
-        <span class="profile-name">{{ auth()->user()->name }}</span>
+
+        <span class="profile-name">
+            {{ auth()->user()->name }}
+        </span>
     </div>
 
 </header>
 
 <main class="main">
 
+    {{-- PAGE HEADER --}}
     <header class="page-header">
         <div>
             <h1>Examiner Workspace</h1>
             <p>Manage examinations assigned to you.</p>
         </div>
+
         <span class="access-label">EXAMINER ACCESS</span>
     </header>
 
     <div class="content">
 
+        {{-- WELCOME SECTION --}}
         <section class="welcome">
             <span class="tag">EXAMINER ACCESS</span>
+
             <h2>Welcome, {{ auth()->user()->name }}!</h2>
+
             <p>
                 This is your examination workspace. View your assigned examinations
                 and access submitted student records. You can enter and review
@@ -621,6 +720,7 @@
             </p>
         </section>
 
+        {{-- DASHBOARD STATISTICS --}}
         <div class="section-heading">
             <h2>Your Overview</h2>
             <p>Summary of your examination assignments.</p>
@@ -648,10 +748,59 @@
 
         </section>
 
+        {{-- ASSIGNED EXAMINATIONS --}}
         <div class="section-heading" id="examinations">
-            <h2>My Assigned Examinations</h2>
-            <p>Only examinations assigned to your account are displayed here.</p>
+
+            @if($scoreTask === 'entry')
+
+                <h2>Examinations Awaiting Score Entry</h2>
+                <p>Examinations with submitted student records awaiting scores.</p>
+
+            @elseif($scoreTask === 'review')
+
+                <h2>Examinations Awaiting Review</h2>
+                <p>Examinations with completed scores awaiting your review.</p>
+
+            @else
+
+                <h2>My Assigned Examinations</h2>
+                <p>Only examinations assigned to your account are displayed here.</p>
+
+            @endif
+
         </div>
+
+        {{-- FILTER INFORMATION --}}
+        @if(in_array($scoreTask, ['entry', 'review'], true))
+
+            <div class="filter-notice">
+
+                @if($scoreTask === 'entry')
+
+                    <strong>Score Entry Filter:</strong>
+                    The list below contains examinations with submitted student records
+                    whose results are awaiting score entry.
+
+                @else
+
+                    <strong>Result Review Filter:</strong>
+                    The list below contains examinations with student results
+                    awaiting examiner review.
+
+                @endif
+
+                <br>
+
+                <a
+                    href="{{ route('cbt.examiner.dashboard') }}#examinations"
+                    class="clear-filter"
+                >
+                    View All Assigned Examinations
+                </a>
+
+            </div>
+
+        @endif
 
         <section class="table-card">
 
@@ -676,6 +825,7 @@
                         </thead>
 
                         <tbody>
+
                             @foreach($examinations as $index => $examination)
 
                                 @php
@@ -691,13 +841,16 @@
                                     );
 
                                     $isSeniorClass = str_starts_with($className, 'SS');
+
                                     $department = $isSeniorClass
                                         ? ($examination->department ?? 'General')
                                         : 'Not applicable';
                                 @endphp
 
                                 <tr>
-                                    <td>{{ $examinations->firstItem() + $index }}</td>
+                                    <td>
+                                        {{ $examinations->firstItem() + $index }}
+                                    </td>
 
                                     <td>
                                         <span class="exam-title">
@@ -705,7 +858,9 @@
                                         </span>
                                     </td>
 
-                                    <td>{{ $examination->subject }}</td>
+                                    <td>
+                                        {{ $examination->subject }}
+                                    </td>
 
                                     <td>
                                         {{ $examination->schoolClass->name ?? 'Not specified' }}
@@ -713,23 +868,35 @@
 
                                     <td>
                                         @if($isSeniorClass)
+
                                             <span class="department-badge {{ $department === 'General' ? 'department-general' : '' }}">
                                                 {{ $department }}
                                             </span>
+
                                         @else
+
                                             <span class="department-badge department-na">
                                                 Not applicable
                                             </span>
+
                                         @endif
                                     </td>
 
-                                    <td>{{ $examination->academic_year }}</td>
+                                    <td>
+                                        {{ $examination->academic_year }}
+                                    </td>
 
-                                    <td>{{ $examination->term }}</td>
+                                    <td>
+                                        {{ $examination->term }}
+                                    </td>
 
-                                    <td>{{ ucfirst($examination->mode) }}</td>
+                                    <td>
+                                        {{ ucfirst($examination->mode) }}
+                                    </td>
 
-                                    <td>{{ $examination->questions_count }}</td>
+                                    <td>
+                                        {{ $examination->questions_count }}
+                                    </td>
 
                                     <td>
                                         <span class="status {{ $statusClass }}">
@@ -738,42 +905,101 @@
                                     </td>
 
                                     <td>
-                                        <a
-                                            href="{{ route('cbt.examiner.examinations.scores.index', $examination) }}"
-                                            class="score-link"
-                                        >
-                                            View Student Scores
-                                        </a>
+
+                                        @if($scoreTask === 'entry')
+
+                                            <a
+                                                href="{{ route('cbt.examiner.examinations.scores.index', ['examination' => $examination, 'task' => 'entry']) }}"
+                                                class="score-link"
+                                            >
+                                                Enter Student Scores
+                                            </a>
+
+                                        @elseif($scoreTask === 'review')
+
+                                            <a
+                                                href="{{ route('cbt.examiner.examinations.scores.index', ['examination' => $examination, 'task' => 'review']) }}"
+                                                class="score-link"
+                                            >
+                                                Review Student Scores
+                                            </a>
+
+                                        @else
+
+                                            <a
+                                                href="{{ route('cbt.examiner.examinations.scores.index', $examination) }}"
+                                                class="score-link"
+                                            >
+                                                View Student Scores
+                                            </a>
+
+                                        @endif
+
                                     </td>
                                 </tr>
 
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>
 
+                {{-- PAGINATION --}}
                 <div class="pagination">
                     {{ $examinations->links() }}
                 </div>
 
             @else
 
+                {{-- FILTER-SPECIFIC EMPTY STATES --}}
                 <div class="empty-state">
-                    <div class="icon">📚</div>
-                    <h3>No Examinations Assigned Yet</h3>
-                    <p>
-                        You currently have no examination assignments.
-                        Please contact the administrator if you believe
-                        an examination should have been assigned to you.
-                    </p>
+
+                    @if($scoreTask === 'entry')
+
+                        <div class="icon">📝</div>
+
+                        <h3>No Scores Awaiting Entry</h3>
+
+                        <p>
+                            There are currently no assigned examinations with
+                            submitted student records awaiting score entry.
+                        </p>
+
+                    @elseif($scoreTask === 'review')
+
+                        <div class="icon">✓</div>
+
+                        <h3>No Results Awaiting Review</h3>
+
+                        <p>
+                            There are currently no assigned examinations with
+                            student results awaiting your review.
+                        </p>
+
+                    @else
+
+                        <div class="icon">📚</div>
+
+                        <h3>No Examinations Assigned Yet</h3>
+
+                        <p>
+                            You currently have no examination assignments.
+                            Please contact the administrator if you believe
+                            an examination should have been assigned to you.
+                        </p>
+
+                    @endif
+
                 </div>
 
             @endif
 
         </section>
 
+        {{-- RESULT APPROVAL NOTICE --}}
         <div class="notice">
             <strong>Result release policy:</strong>
+
             Examiners may enter and review assigned examination scores.
             However, students must not see their results until an authorised
             administrator has approved them.
@@ -781,6 +1007,7 @@
 
     </div>
 
+    {{-- FOOTER --}}
     <footer class="footer">
         © {{ date('Y') }} Abuhaneefah Islamic Academy.
         CBT Examiner Portal.

@@ -729,8 +729,6 @@
                     Examiners
                 </a>
 
-                <!-- CONNECTED EXAMINATION LINK -->
-
                 <a href="{{ route('cbt.admin.examinations.index') }}" class="nav-link">
                     <span class="nav-icon">▤</span>
                     Examinations
@@ -738,19 +736,14 @@
 
                 <a href="{{ route('cbt.admin.results.index') }}" class="nav-link">
                     <span class="nav-icon">▥</span>
-                    Results
+                    Results & Approval
                 </a>
 
                 <div class="nav-label">Administration</div>
 
-                <a href="#pins" class="nav-link">
+                <a href="{{ route('cbt.admin.result-pins.index') }}" class="nav-link">
                     <span class="nav-icon">◇</span>
                     Result PINs
-                </a>
-
-                <a href="#settings" class="nav-link">
-                    <span class="nav-icon">⚙</span>
-                    Settings
                 </a>
 
             </nav>
@@ -853,8 +846,8 @@
                                     academy's CBT system develops.
                                 </p>
 
-                                <a href="{{ route('cbt.admin.students.index') }}" class="slide-link">
-                                    Student Records →
+                                <a href="{{ route('cbt.admin.examinations.index') }}" class="slide-link">
+                                    Examination Management →
                                 </a>
                             </div>
 
@@ -876,8 +869,8 @@
                                     to examination records.
                                 </p>
 
-                                <a href="{{ route('cbt.admin.examinations.index') }}" class="slide-link">
-                                    Examination Management →
+                                <a href="{{ route('cbt.admin.results.index') }}" class="slide-link">
+                                    Review Results →
                                 </a>
                             </div>
 
@@ -917,49 +910,50 @@
 
 
                 <section class="stats-grid">
-                
+
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">♙</div>
                         </div>
-                
+
                         <h3>{{ $registeredStudents }}</h3>
                         <p>Registered Students</p>
                         <small>Total students registered in the academy's CBT portal</small>
                     </div>
-                
+
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">♧</div>
                         </div>
-                
+
                         <h3>{{ $registeredExaminers }}</h3>
                         <p>Registered Examiners</p>
                         <small>Total examiner accounts registered in the portal</small>
                     </div>
-                
+
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">▤</div>
                         </div>
-                
+
                         <h3>{{ $totalExaminations }}</h3>
                         <p>Examinations</p>
                         <small>Total examinations created in the portal</small>
                     </div>
-                
+
                     <div class="stat-card">
                         <div class="stat-top">
                             <div class="stat-icon">▥</div>
                         </div>
-                
+
                         <h3>{{ $resultsAwaitingApproval }}</h3>
                         <p>Results Awaiting Approval</p>
                         <small>Results waiting for administrator approval</small>
                     </div>
-                
+
                 </section>
-                
+
+
                 <!-- MANAGEMENT CENTRE -->
 
                 <div class="section-heading">
@@ -969,6 +963,8 @@
 
 
                 <section class="management-grid">
+
+                    <!-- STUDENT MANAGEMENT -->
 
                     <a href="{{ route('cbt.admin.students.index') }}" class="management-card">
 
@@ -990,6 +986,8 @@
                     </a>
 
 
+                    <!-- EXAMINER MANAGEMENT -->
+
                     <a href="{{ route('cbt.admin.examiners.index') }}" class="management-card">
 
                         <div class="management-icon">♧</div>
@@ -1010,7 +1008,7 @@
                     </a>
 
 
-                    <!-- CONNECTED EXAMINATION MANAGEMENT CARD -->
+                    <!-- EXAMINATION MANAGEMENT -->
 
                     <a href="{{ route('cbt.admin.examinations.index') }}" class="management-card">
 
@@ -1031,6 +1029,30 @@
                     </a>
 
 
+                    <!-- QUESTIONS AND EXAMINER ASSIGNMENTS -->
+
+                    <a href="{{ route('cbt.admin.examinations.index') }}" class="management-card">
+
+                        <div class="management-icon">✎</div>
+
+                        <h3>Questions & Examiner Assignments</h3>
+
+                        <p>
+                            Select an examination to create and manage
+                            questions, edit answer options and assign
+                            examiners to examination tasks.
+                        </p>
+
+                        <div class="management-footer">
+                            <span class="status available">Available</span>
+                            <span class="arrow">→</span>
+                        </div>
+
+                    </a>
+
+
+                    <!-- RESULTS AND APPROVAL -->
+
                     <a href="{{ route('cbt.admin.results.index') }}" class="management-card">
 
                         <div class="management-icon">▥</div>
@@ -1050,27 +1072,31 @@
                     </a>
 
 
-                    <a href="#pins" class="management-card">
+                    <!-- RESULT PIN MANAGEMENT -->
+
+                    <a href="{{ route('cbt.admin.result-pins.index') }}" class="management-card">
 
                         <div class="management-icon">◇</div>
 
                         <h3>Result PIN Management</h3>
 
                         <p>
-                            Record payments, generate result PINs
-                            and manage their validity across two
-                            consecutive academic terms.
+                            Record payments, generate student-specific
+                            Result PINs, view issued PIN records and manage
+                            their validity across two consecutive terms.
                         </p>
 
                         <div class="management-footer">
-                            <span class="status">Planned</span>
+                            <span class="status available">Available</span>
                             <span class="arrow">→</span>
                         </div>
 
                     </a>
 
 
-                    <a href="#settings" class="management-card">
+                    <!-- PORTAL SETTINGS -->
+
+                    <div class="management-card">
 
                         <div class="management-icon">⚙</div>
 
@@ -1082,26 +1108,30 @@
                         </p>
 
                         <div class="management-footer">
-                            <span class="status">Planned</span>
-                            <span class="arrow">→</span>
+                            <span class="status">Not Available</span>
+                            <span class="arrow">—</span>
                         </div>
 
-                    </a>
+                    </div>
 
                 </section>
 
+
+                <!-- SYSTEM INFORMATION -->
 
                 <section class="notice">
                     <h3>System Information</h3>
 
                     <p>
-                        The CBT Management Portal is being developed
-                        progressively. Additional modules and live
-                        dashboard statistics will become available
-                        as their functionality is implemented.
+                        The CBT Management Portal provides centralised
+                        management of student records, examinations,
+                        examiner assignments, result approval and
+                        secure student result access.
                     </p>
                 </section>
 
+
+                <!-- FOOTER -->
 
                 <footer class="footer">
                     <span>
@@ -1117,6 +1147,8 @@
 
     </div>
 
+
+    <!-- JAVASCRIPT -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

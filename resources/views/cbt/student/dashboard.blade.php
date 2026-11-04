@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,9 +16,7 @@
             --muted: #64748b;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -259,23 +256,17 @@
         }
 
         @media (max-width: 900px) {
-            .sidebar {
-                width: 210px;
-            }
+            .sidebar { width: 210px; }
 
             .cards {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .content {
-                padding: 20px;
-            }
+            .content { padding: 20px; }
         }
 
         @media (max-width: 600px) {
-            .layout {
-                display: block;
-            }
+            .layout { display: block; }
 
             .sidebar {
                 width: 100%;
@@ -295,33 +286,19 @@
                 height: 50px;
             }
 
-            .brand h2 {
-                margin: 0 0 5px;
-            }
+            .brand h2 { margin: 0 0 5px; }
 
-            .nav-title {
-                margin-top: 16px;
-            }
+            .nav-title { margin-top: 16px; }
 
-            .topbar {
-                padding: 18px;
-            }
+            .topbar { padding: 18px; }
 
-            .topbar h1 {
-                font-size: 19px;
-            }
+            .topbar h1 { font-size: 19px; }
 
-            .cards {
-                grid-template-columns: 1fr;
-            }
+            .cards { grid-template-columns: 1fr; }
 
-            .welcome {
-                padding: 22px;
-            }
+            .welcome { padding: 22px; }
 
-            .welcome h2 {
-                font-size: 21px;
-            }
+            .welcome h2 { font-size: 21px; }
         }
     </style>
 </head>
@@ -348,12 +325,16 @@
             Available Examinations
         </a>
 
-        <a href="#my-results" class="nav-item">
+        <a href="{{ route('cbt.student.results.pin') }}" class="nav-item">
             My Results
         </a>
 
-        <a href="#result-pin" class="nav-item">
+        <a href="{{ route('cbt.student.results.pin') }}" class="nav-item">
             Result PIN
+        </a>
+
+        <a href="{{ route('cbt.student.results.pin') }}" class="nav-item">
+            Consolidated Results
         </a>
 
         <p class="nav-title">Account</p>
@@ -386,9 +367,9 @@
                 <h2>Welcome, {{ auth()->user()->name }}!</h2>
                 <p>
                     This is your personal examination portal.
-                    You will be able to access examinations assigned to you,
-                    take available tests, and view your results after they
-                    have been reviewed and approved by the school administrator.
+                    You can view examinations assigned to you, take available
+                    tests, and access approved results after validating your
+                    school-issued Result PIN.
                 </p>
             </section>
 
@@ -414,42 +395,71 @@
                     <div class="card-icon">💻</div>
                     <h3>Take an Examination</h3>
                     <p>
-                        Complete your computer-based tests online or at
-                        the school's computer centre when an examination
-                        is available to you.
+                        Open an examination available to you and follow its
+                        instructions to begin. A Result PIN is not required
+                        to sit for an examination.
                     </p>
-                    <span class="status">Module in development</span>
+
+                    <a href="{{ route('cbt.student.examinations.index') }}"
+                       class="exam-button">
+                        Find an Examination
+                    </a>
                 </article>
 
                 <article class="card" id="my-results">
                     <div class="card-icon">📊</div>
                     <h3>My Results</h3>
                     <p>
-                        View your approved examination results when they
-                        are released by the school administrator.
+                        Validate your Result PIN to access your approved
+                        examination results.
                     </p>
-                    <span class="status">Module in development</span>
+
+                    <a href="{{ route('cbt.student.results.pin') }}"
+                       class="exam-button">
+                        Access My Results
+                    </a>
                 </article>
 
                 <article class="card" id="result-pin">
                     <div class="card-icon">🔐</div>
                     <h3>Result PIN</h3>
                     <p>
-                        Use your school-issued result PIN to unlock eligible
-                        approved results during its validity period.
+                        Enter your school-issued 12-digit Result PIN to unlock
+                        eligible approved results during its validity period.
                     </p>
-                    <span class="status">Module in development</span>
+
+                    <a href="{{ route('cbt.student.results.pin') }}"
+                       class="exam-button">
+                        Enter Result PIN
+                    </a>
                 </article>
 
                 <article class="card">
                     <div class="card-icon">📄</div>
+                    <h3>Consolidated Results</h3>
+                    <p>
+                        View your consolidated subject results for an
+                        academic term covered by your validated Result PIN.
+                    </p>
+
+                    <a href="{{ route('cbt.student.results.pin') }}"
+                       class="exam-button">
+                        Unlock Result Access
+                    </a>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🖨️</div>
                     <h3>Print Result Slip</h3>
                     <p>
-                        Access a printable, school-branded result slip
-                        for eligible results after they have been approved
-                        and unlocked.
+                        Access your approved examination results and print
+                        an individual result slip after validating your PIN.
                     </p>
-                    <span class="status">Module in development</span>
+
+                    <a href="{{ route('cbt.student.results.pin') }}"
+                       class="exam-button">
+                        Access Result Slips
+                    </a>
                 </article>
 
                 <article class="card">
@@ -459,7 +469,7 @@
                         Your portal is linked to your registered student
                         account. Keep your login details private.
                     </p>
-                    <span class="status">Account details to be added</span>
+                    <span class="status">Account details page not available</span>
                 </article>
 
             </div>
@@ -467,10 +477,11 @@
             <section class="notice">
                 <h3>Important Examination Information</h3>
                 <p>
-                    A result PIN is for viewing eligible results only.
-                    You do not need a result PIN to sit for an examination.
-                    Results will become accessible only after the school
-                    administrator has approved their release.
+                    A Result PIN is required only for accessing eligible
+                    approved results. You do not need a Result PIN to sit
+                    for an examination. Results become accessible only
+                    after the school administrator approves their release.
+                    Your PIN covers only its assigned two academic terms.
                 </p>
             </section>
 
