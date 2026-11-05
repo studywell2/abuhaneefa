@@ -383,33 +383,25 @@ Route::get('/login', function () {
 
 
 
-// TEMPORARY DATABASE CONNECTION TEST
+
+// TEMPORARY DATABASE CONFIGURATION TEST
 Route::get('/__temporary-db-check-7f3c91a8b2', function () {
+    $mysql = config('database.connections.mysql', []);
+    $options = $mysql['options'] ?? [];
 
-return response()->json([
-    'php_version' => PHP_VERSION,
-    'sapi' => PHP_SAPI,
-    'loaded_ini' => php_ini_loaded_file(),
-    'scanned_ini' => php_ini_scanned_files(),
-    'pdo_mysql_loaded' => extension_loaded('pdo_mysql'),
-    'ssl_ca_constant' => defined('PDO::MYSQL_ATTR_SSL_CA'),
-    'ssl_verify_constant' => defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT'),
-]);
-    try {
-        \Illuminate\Support\Facades\DB::connection('mysql')
-            ->select('SELECT 1');
+    $caPath = $options[PDO::MYSQL_ATTR_SSL_CA] ?? null;
 
-        return response('SUCCESS: Apache Laravel connection to MySQL works.', 200);
-
-    } catch (\Throwable $e) {
-        \Illuminate\Support\Facades\Log::error(
-            'Temporary Apache database test failed: ' . get_class($e) . ': ' . $e->getMessage()
-        );
-
-        return response(
-            'FAILED: ' . get_class($e) . ' - ' . $e->getMessage(),
-            500
-        );
-    }
+    return response()->json([
+        'default_connection' => config('database.default'),
+        'mysql_driver' => $mysql['driver'] ?? null,
+        'mysql_host_configured' => !empty($mysql['host']),
+        'mysql_port_configured' => !empty($mysql['port']),
+        'mysql_database_configured' => !empty($mysql['database']),
+        'ssl_option_keys' => array_keys($options),
+        'ssl_ca_path' => $caPath,
+        'ssl_ca_exists' => is_string($caPath) && is_file($caPath),
+        'ssl_ca_readable' => is_string($caPath) && is_readable($caPath),
+        'ssl_verify_server_cert' =>
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] ?? null,
+    ]);
 });
-
