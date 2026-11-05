@@ -384,30 +384,28 @@ Route::get('/login', function () {
 
 
 
-// TEMPORARY ADMIN LOGIN DIAGNOSTIC
 Route::get('/__temporary-db-check-7f3c91a8b2', function () {
     try {
         \Illuminate\Support\Facades\DB::purge('mysql');
 
-        $user = \App\Models\User::where(
-            'email',
-            'admin@abuhaneefa.com'
-        )->first();
+        $admins = \App\Models\User::whereIn(
+            'role',
+            ['admin', 'administrator']
+        )->get(['id', 'name', 'email', 'role']);
+
+        $roles = \App\Models\User::query()
+            ->select('role')
+            ->distinct()
+            ->pluck('role');
 
         return response()->json([
             'database_connection' => 'SUCCESS',
-            'admin_account_exists' => $user !== null,
-            'admin_role' => $user?->role,
-            'password_matches_test' => $user
-                ? \Illuminate\Support\Facades\Hash::check(
-                    'Admin@12345',
-                    $user->password
-                )
-                : false,
+            'available_roles' => $roles,
+            'administrator_accounts' => $admins,
         ]);
     } catch (\Throwable $e) {
         \Illuminate\Support\Facades\Log::error(
-            'Admin diagnostic failed',
+            'Administrator diagnostic failed',
             ['message' => $e->getMessage()]
         );
 
