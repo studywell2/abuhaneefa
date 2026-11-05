@@ -384,34 +384,133 @@ Route::get('/login', function () {
 
 
 
-Route::get('/__temporary-db-check-7f3c91a8b2', function () {
+
+// ======================================================
+// TEMPORARY, TOKEN-PROTECTED INITIAL ADMIN SETUP
+// REMOVE AFTER SUCCESSFUL ADMIN CREATION
+// ======================================================
+
+Route::get('/__initial-admin-setup-7f3c91a8b2', function () {
+
+    if (!getenv('ADMIN_SETUP_TOKEN')) {
+        abort(404);
+    }
+
+    if (config('database.default') !== 'mysql') {
+        abort(503, 'MySQL is not the configured database.');
+    }
+
+    if (\App\Models\User::query()->exists()) {
+        abort(403, 'Initial administrator setup is no longer available.');
+    }
+
+    $csrf = csrf_field();
+
+    return response(
+        '<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Initial Administrator Setup</title>
+        </head>
+        <body style="font-family:Arial;max-width:450px;margin:60px auto;padding:20px;">
+            <h2>Initial Administrator Setup</h2>
+            <p>Create the first administrator account.</p>
+
+            <form method="POST">
+                ' . $csrf . '
+
+                <label>Setup secret token</label>
+                <input type="password" name="setup_token" required
+                    autocomplete="off"
+                    style="display:block;width:100%;padding:12px;margin:8px 0 20px;">
+
+                <label>Administrator password</label>
+                <input type="password" name="password" required
+                    minlength="12" autocomplete="new-password"
+                    style="display:block;width:100%;padding:12px;margin:8px 0 20px;">
+
+                <label>Confirm password</label>
+                <input type="password" name="password_confirmation" required
+                    minlength="12" autocomplete="new-password"
+                    style="display:block;width:100%;padding:12px;margin:8px 0 20px;">
+
+                <button type="submit" style="padding:12px 20px;">
+                    Create Administrator
+                </button>
+            </form>
+        </body>
+        </html>'
+    );
+
+})->middleware('throttle:3,1');
+
+
+Route::post('/__initial-admin-setup-7f3c91a8b2', function (
+    \Illuminate\Http\Request $request
+) {
+
+    $expectedToken = getenv('ADMIN_SETUP_TOKEN') ?: '';
+    $providedToken = (string) $request->input('setup_token', '');
+
+    if (
+        $expectedToken === '' ||
+        !hash_equals($expectedToken, $providedToken)
+    ) {
+        abort(403, 'Invalid setup authorization.');
+    }
+
+    if (config('database.default') !== 'mysql') {
+        abort(503, 'MySQL is not the configured database.');
+    }
+
+    $password = (string) $request->input('password', '');
+    $confirmation = (string) $request->input('password_confirmation', '');
+
+    if (strlen($password) < 12) {
+        return response('Password must contain at least 12 characters.', 422);
+    }
+
+    if (!hash_equals($password, $confirmation)) {
+        return response('Passwords do not match.', 422);
+    }
+
     try {
-        \Illuminate\Support\Facades\DB::purge('mysql');
 
-        $admins = \App\Models\User::whereIn(
-            'role',
-            ['admin', 'administrator']
-        )->get(['id', 'name', 'email', 'role']);
+        $user = \Illuminate\Support\Facades\DB::connection('mysql')
+            ->transaction(function () use ($password) {
 
-        $roles = \App\Models\User::query()
-            ->select('role')
-            ->distinct()
-            ->pluck('role');
+                if (\App\Models\User::query()->exists()) {
+                    throw new \RuntimeException(
+                        'An account already exists. Setup is disabled.'
+                    );
+                }
 
-        return response()->json([
-            'database_connection' => 'SUCCESS',
-            'available_roles' => $roles,
-            'administrator_accounts' => $admins,
-        ]);
+                return \App\Models\User::create([
+                    'name' => 'System Administrator',
+                    'email' => 'admin@abuhaneefa.com',
+                    'password' => $password,
+                    'role' => 'administrator',
+                    'is_active' => true,
+                ]);
+            });
+
+        return response(
+            'Administrator created successfully. You can now log in using admin@abuhaneefa.com.'
+        );
+
     } catch (\Throwable $e) {
+
         \Illuminate\Support\Facades\Log::error(
-            'Administrator diagnostic failed',
+            'Initial administrator setup failed.',
             ['message' => $e->getMessage()]
         );
 
-        return response()->json([
-            'status' => 'FAILED',
-            'message' => 'Diagnostic failed. Check application logs.',
-        ], 500);
+        return response(
+            'Administrator setup failed. Check the application logs.',
+            500
+        );
     }
-});
+
+})->middleware('throttle:3,1');
