@@ -108,6 +108,20 @@ try {
 
 echo "=== End Laravel Database Connection Test ==="
 
+echo "=== Preparing MySQL SSL Certificate for Apache ==="
+
+if [ -r "$CA_FILE" ]; then
+    cp "$CA_FILE" /tmp/aiven-ca.pem
+    chmod 644 /tmp/aiven-ca.pem
+
+    export MYSQL_ATTR_SSL_CA=/tmp/aiven-ca.pem
+
+    echo "SSL certificate copied successfully."
+    echo "Apache will use: $MYSQL_ATTR_SSL_CA"
+else
+    echo "ERROR: Original SSL certificate is missing or unreadable."
+    exit 1
+fi
 chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null
 chmod -R 775 storage bootstrap/cache database 2>/dev/null
 
