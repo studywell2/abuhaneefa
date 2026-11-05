@@ -378,3 +378,28 @@ Route::get('/login', function () {
     return redirect()->route('cbt.login');
 
 })->name('login');
+
+
+
+
+
+// TEMPORARY DATABASE CONNECTION TEST
+Route::get('/__temporary-db-check-7f3c91a8b2', function () {
+    try {
+        \Illuminate\Support\Facades\DB::connection('mysql')
+            ->select('SELECT 1');
+
+        return response('SUCCESS: Apache Laravel connection to MySQL works.', 200);
+
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::error(
+            'Temporary Apache database test failed: ' . get_class($e) . ': ' . $e->getMessage()
+        );
+
+        return response(
+            'FAILED: ' . get_class($e) . ' - ' . $e->getMessage(),
+            500
+        );
+    }
+});
+
