@@ -384,33 +384,36 @@ Route::get('/login', function () {
 
 
 
-// TEMPORARY APACHE DATABASE CONNECTION TEST
+// TEMPORARY ADMIN LOGIN DIAGNOSTIC
 Route::get('/__temporary-db-check-7f3c91a8b2', function () {
     try {
         \Illuminate\Support\Facades\DB::purge('mysql');
 
-        \Illuminate\Support\Facades\DB::connection('mysql')
-            ->select('SELECT 1');
+        $user = \App\Models\User::where(
+            'email',
+            'admin@abuhaneefa.com'
+        )->first();
 
         return response()->json([
-            'status' => 'SUCCESS',
-            'message' => 'Apache connected to Aiven MySQL successfully.',
-            'ssl_verification' => 'enabled',
+            'database_connection' => 'SUCCESS',
+            'admin_account_exists' => $user !== null,
+            'admin_role' => $user?->role,
+            'password_matches_test' => $user
+                ? \Illuminate\Support\Facades\Hash::check(
+                    'Admin@12345',
+                    $user->password
+                )
+                : false,
         ]);
-
     } catch (\Throwable $e) {
         \Illuminate\Support\Facades\Log::error(
-            'Temporary Apache database test failed',
-            [
-                'exception' => get_class($e),
-                'message' => $e->getMessage(),
-            ]
+            'Admin diagnostic failed',
+            ['message' => $e->getMessage()]
         );
 
         return response()->json([
             'status' => 'FAILED',
-            'exception' => get_class($e),
-            'message' => $e->getMessage(),
+            'message' => 'Diagnostic failed. Check application logs.',
         ], 500);
     }
 });
