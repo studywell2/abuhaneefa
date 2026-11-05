@@ -385,6 +385,16 @@ Route::get('/login', function () {
 
 // TEMPORARY DATABASE CONNECTION TEST
 Route::get('/__temporary-db-check-7f3c91a8b2', function () {
+
+return response()->json([
+    'php_version' => PHP_VERSION,
+    'sapi' => PHP_SAPI,
+    'loaded_ini' => php_ini_loaded_file(),
+    'scanned_ini' => php_ini_scanned_files(),
+    'pdo_mysql_loaded' => extension_loaded('pdo_mysql'),
+    'ssl_ca_constant' => defined('PDO::MYSQL_ATTR_SSL_CA'),
+    'ssl_verify_constant' => defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT'),
+]);
     try {
         \Illuminate\Support\Facades\DB::connection('mysql')
             ->select('SELECT 1');
