@@ -10,7 +10,6 @@ fi
 PORT=${PORT:-80}
 echo "Using PORT: $PORT"
 
-# Verify SSL certificate
 echo "=== MySQL SSL Diagnostic ==="
 
 CA_FILE="${MYSQL_ATTR_SSL_CA:-/etc/secrets/ca.pem}"
@@ -23,7 +22,6 @@ fi
 
 echo "PDO MySQL extension: $(php -r "echo extension_loaded('pdo_mysql') ? 'AVAILABLE' : 'MISSING';")"
 
-# Test direct PDO connection without printing credentials
 if [ -n "$DB_HOST" ] && [ -n "$DB_USERNAME" ] && [ -n "$DB_PASSWORD" ]; then
     echo "Testing direct Aiven PDO connection..."
 
@@ -74,7 +72,7 @@ mkdir -p storage/logs
 mkdir -p bootstrap/cache
 
 if [ -z "$DB_HOST" ] && [ -z "$DATABASE_URL" ]; then
-    echo "No external DB configured — using SQLite"
+    echo "No external DB configured - using SQLite"
     export DB_CONNECTION="sqlite"
     touch database/database.sqlite
     chmod 666 database/database.sqlite
@@ -83,12 +81,35 @@ fi
 echo "Running migrations..."
 php artisan migrate --force 2>&1 || echo "WARNING: Migration failed, continuing anyway"
 
-chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null
-chmod -R 775 storage bootstrap/cache database 2>/dev/null
-
 php artisan config:clear 2>/dev/null
 php artisan route:clear 2>/dev/null
 php artisan view:clear 2>/dev/null
+
+echo "=== Laravel Database Connection Test ==="
+
+php artisan tinker --execute='
+try {
+    $config = config("database.connections.mysql");
+
+    echo "Default connection: " . config("database.default") . PHP_EOL;
+    echo "MySQL host configured: " . (!empty($config["host"]) ? "YES" : "NO") . PHP_EOL;
+    echo "MySQL port configured: " . (!empty($config["port"]) ? "YES" : "NO") . PHP_EOL;
+    echo "SSL CA configured: " . (!empty($config["options"][PDO::MYSQL_ATTR_SSL_CA]) ? "YES" : "NO") . PHP_EOL;
+
+    DB::connection("mysql")->getPdo();
+
+    echo "SUCCESS: Laravel connected to MySQL." . PHP_EOL;
+} catch (Throwable $e) {
+    echo "FAILED: Laravel database connection." . PHP_EOL;
+    echo get_class($e) . PHP_EOL;
+    echo $e->getMessage() . PHP_EOL;
+}
+'
+
+echo "=== End Laravel Database Connection Test ==="
+
+chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null
+chmod -R 775 storage bootstrap/cache database 2>/dev/null
 
 echo "=== Starting Apache ==="
 exec "$@"
