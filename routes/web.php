@@ -384,24 +384,33 @@ Route::get('/login', function () {
 
 
 
-// TEMPORARY DATABASE CONFIGURATION TEST
+// TEMPORARY APACHE DATABASE CONNECTION TEST
 Route::get('/__temporary-db-check-7f3c91a8b2', function () {
-    $mysql = config('database.connections.mysql', []);
-    $options = $mysql['options'] ?? [];
+    try {
+        \Illuminate\Support\Facades\DB::purge('mysql');
 
-    $caPath = $options[PDO::MYSQL_ATTR_SSL_CA] ?? null;
+        \Illuminate\Support\Facades\DB::connection('mysql')
+            ->select('SELECT 1');
 
-    return response()->json([
-        'default_connection' => config('database.default'),
-        'mysql_driver' => $mysql['driver'] ?? null,
-        'mysql_host_configured' => !empty($mysql['host']),
-        'mysql_port_configured' => !empty($mysql['port']),
-        'mysql_database_configured' => !empty($mysql['database']),
-        'ssl_option_keys' => array_keys($options),
-        'ssl_ca_path' => $caPath,
-        'ssl_ca_exists' => is_string($caPath) && is_file($caPath),
-        'ssl_ca_readable' => is_string($caPath) && is_readable($caPath),
-        'ssl_verify_server_cert' =>
-            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] ?? null,
-    ]);
+        return response()->json([
+            'status' => 'SUCCESS',
+            'message' => 'Apache connected to Aiven MySQL successfully.',
+            'ssl_verification' => 'enabled',
+        ]);
+
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::error(
+            'Temporary Apache database test failed',
+            [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+            ]
+        );
+
+        return response()->json([
+            'status' => 'FAILED',
+            'exception' => get_class($e),
+            'message' => $e->getMessage(),
+        ], 500);
+    }
 });
