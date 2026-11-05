@@ -9,7 +9,25 @@ if [ -z "$APP_KEY" ]; then
     echo "Generated APP_KEY"
 fi
 
-# Configure Apache to listen on the correct PORT (Render provides this)
+# Check MySQL SSL certificate
+echo "=== Checking MySQL SSL certificate ==="
+
+if [ -f /etc/secrets/ca.pem ]; then
+    echo "SSL certificate EXISTS."
+else
+    echo "ERROR: SSL certificate NOT FOUND at /etc/secrets/ca.pem"
+fi
+
+if [ -r /etc/secrets/ca.pem ]; then
+    echo "SSL certificate is READABLE."
+else
+    echo "ERROR: SSL certificate is NOT READABLE."
+fi
+
+echo "MYSQL_ATTR_SSL_CA is configured: ${MYSQL_ATTR_SSL_CA:+YES}"
+echo "=== SSL certificate check complete ==="
+
+# Configure Apache to listen on the correct PORT
 PORT=${PORT:-80}
 echo "Using PORT: $PORT"
 
