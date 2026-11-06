@@ -455,7 +455,7 @@
             ? selectedOption.dataset.className || ''
             : '';
 
-        const isSeniorSecondary = /^SS[1-3]$/i.test(className.trim());
+        const isSeniorSecondary = /^SS[1-3](?:\s|$)/i.test(className.trim());
 
         departmentGroup.style.display = isSeniorSecondary ? 'flex' : 'none';
         departmentSelect.disabled = !isSeniorSecondary;
