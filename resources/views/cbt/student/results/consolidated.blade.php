@@ -579,7 +579,7 @@
     @endif
 
     <footer class="footer">
-        Abu Haneefah Islamic Academy · Computer-Based Testing Centre
+        Abu Haneefah Islamic Academy · Computer-Based  Centre
         <br>
         This document contains approved school examination records.
     </footer>

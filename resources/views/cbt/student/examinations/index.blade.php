@@ -427,7 +427,7 @@
         </div>
 
         <footer>
-            Abu Haneefah Islamic Academy · Computer-Based Testing Portal
+            Abu Haneefah Islamic Academy · Computer-Based  Portal
         </footer>
     </main>
 
