@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -724,6 +725,11 @@
                     Students
                 </a>
 
+                <a href="{{ route('cbt.admin.classes.index') }}" class="nav-link">
+                    <span class="nav-icon">▦</span>
+                    School Classes
+                </a>
+
                 <a href="{{ route('cbt.admin.examiners.index') }}" class="nav-link">
                     <span class="nav-icon">♧</span>
                     Examiners
@@ -976,6 +982,27 @@
                             Register students, update their information,
                             manage student profiles and assign unique
                             identification numbers.
+                        </p>
+
+                        <div class="management-footer">
+                            <span class="status available">Available</span>
+                            <span class="arrow">→</span>
+                        </div>
+
+                    </a>
+
+
+                    <!-- SCHOOL CLASS MANAGEMENT -->
+
+                    <a href="{{ route('cbt.admin.classes.index') }}" class="management-card">
+
+                        <div class="management-icon">▦</div>
+
+                        <h3>School Class Management</h3>
+
+                        <p>
+                            Create school classes, organise JSS and SS levels,
+                            update class details and manage class activation status.
                         </p>
 
                         <div class="management-footer">

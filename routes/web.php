@@ -14,6 +14,7 @@ use App\Http\Controllers\Cbt\Admin\ExaminationQuestionController;
 use App\Http\Controllers\Cbt\Admin\ExaminationAssignmentController;
 use App\Http\Controllers\Cbt\Admin\ResultApprovalController;
 use App\Http\Controllers\Cbt\Admin\ResultPinController;
+use App\Http\Controllers\Cbt\Admin\SchoolClassController;
 
 use App\Http\Controllers\Cbt\Examiner\DashboardController as ExaminerDashboardController;
 use App\Http\Controllers\Cbt\Examiner\ScoreController as ExaminerScoreController;
@@ -116,6 +117,26 @@ Route::prefix('cbt')->name('cbt.')->group(function () {
 
             Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
                 ->name('admin.dashboard');
+
+         // SCHOOL CLASS MANAGEMENT
+
+Route::get('/admin/classes', [SchoolClassController::class, 'index'])
+    ->name('admin.classes.index');
+
+Route::get('/admin/classes/create', [SchoolClassController::class, 'create'])
+    ->name('admin.classes.create');
+
+Route::post('/admin/classes', [SchoolClassController::class, 'store'])
+    ->name('admin.classes.store');
+
+Route::get('/admin/classes/{schoolClass}/edit', [SchoolClassController::class, 'edit'])
+    ->name('admin.classes.edit');
+
+Route::put('/admin/classes/{schoolClass}', [SchoolClassController::class, 'update'])
+    ->name('admin.classes.update');
+
+Route::patch('/admin/classes/{schoolClass}/status', [SchoolClassController::class, 'toggleStatus'])
+    ->name('admin.classes.toggle-status');
 
 
             // EXAMINER MANAGEMENT
