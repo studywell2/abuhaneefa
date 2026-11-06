@@ -10,6 +10,27 @@ use Illuminate\Validation\Rule;
 class SchoolClassController extends Controller
 {
     /**
+     * Available class options.
+     */
+    private const GRADES = [
+        'Pry 1',
+        'Pry 2',
+        'Pry 3',
+        'Pry 4',
+        'Pry 5',
+        'Pry 6',
+        'JSS1',
+        'JSS2',
+        'JSS3',
+        'SS1',
+        'SS2',
+        'SS3',
+        'Ibtidaaiyah',
+        'Idaadiyah',
+        'Thanawiyah',
+    ];
+
+    /**
      * Display all school classes.
      */
     public function index()
@@ -40,6 +61,26 @@ class SchoolClassController extends Controller
     }
 
     /**
+     * Determine the school level for a class.
+     */
+    private function getLevel(string $grade): string
+    {
+        if (str_starts_with($grade, 'Pry')) {
+            return 'Primary';
+        }
+
+        if (str_starts_with($grade, 'JSS')) {
+            return 'Junior Secondary';
+        }
+
+        if (str_starts_with($grade, 'SS')) {
+            return 'Senior Secondary';
+        }
+
+        return 'Islamic Studies';
+    }
+
+    /**
      * Store a new school class.
      */
     public function store(Request $request)
@@ -48,7 +89,7 @@ class SchoolClassController extends Controller
             'grade' => [
                 'required',
                 'string',
-                Rule::in(['JSS1', 'JSS2', 'JSS3', 'SS1', 'SS2', 'SS3']),
+                Rule::in(self::GRADES),
             ],
             'department' => [
                 'nullable',
@@ -62,21 +103,18 @@ class SchoolClassController extends Controller
             ],
         ]);
 
-        $isJunior = str_starts_with($validated['grade'], 'JSS');
+        $grade = $validated['grade'];
 
-        $level = $isJunior
-            ? 'Junior Secondary'
-            : 'Senior Secondary';
+        $isSenior = in_array($grade, ['SS1', 'SS2', 'SS3']);
 
-        $department = $isJunior
-            ? null
-            : $validated['department'];
+        $department = $isSenior
+            ? $validated['department']
+            : null;
 
         $name = $department
-            ? $validated['grade'] . ' ' . $department
-            : $validated['grade'];
+            ? $grade . ' ' . $department
+            : $grade;
 
-        // Check the complete generated class name.
         $duplicate = SchoolClass::where('name', $name)->exists();
 
         if ($duplicate) {
@@ -89,7 +127,7 @@ class SchoolClassController extends Controller
 
         SchoolClass::create([
             'name' => $name,
-            'level' => $level,
+            'level' => $this->getLevel($grade),
             'arm' => $department,
             'is_active' => $validated['is_active'],
         ]);
@@ -116,7 +154,7 @@ class SchoolClassController extends Controller
             'grade' => [
                 'required',
                 'string',
-                Rule::in(['JSS1', 'JSS2', 'JSS3', 'SS1', 'SS2', 'SS3']),
+                Rule::in(self::GRADES),
             ],
             'department' => [
                 'nullable',
@@ -130,22 +168,18 @@ class SchoolClassController extends Controller
             ],
         ]);
 
-        $isJunior = str_starts_with($validated['grade'], 'JSS');
+        $grade = $validated['grade'];
 
-        $level = $isJunior
-            ? 'Junior Secondary'
-            : 'Senior Secondary';
+        $isSenior = in_array($grade, ['SS1', 'SS2', 'SS3']);
 
-        $department = $isJunior
-            ? null
-            : $validated['department'];
+        $department = $isSenior
+            ? $validated['department']
+            : null;
 
         $name = $department
-            ? $validated['grade'] . ' ' . $department
-            : $validated['grade'];
+            ? $grade . ' ' . $department
+            : $grade;
 
-        // Check for another class with the same complete name.
-        // Exclude the class currently being edited.
         $duplicate = SchoolClass::where('name', $name)
             ->where('id', '!=', $schoolClass->id)
             ->exists();
@@ -160,7 +194,7 @@ class SchoolClassController extends Controller
 
         $schoolClass->update([
             'name' => $name,
-            'level' => $level,
+            'level' => $this->getLevel($grade),
             'arm' => $department,
             'is_active' => $validated['is_active'],
         ]);

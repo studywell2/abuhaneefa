@@ -92,6 +92,11 @@
             border-color: #315C72;
         }
 
+        select optgroup {
+            color: #173B4D;
+            font-weight: bold;
+        }
+
         .checkbox-row {
             display: flex;
             align-items: center;
@@ -118,16 +123,6 @@
             padding: 12px;
             border-radius: 6px;
             margin-bottom: 20px;
-        }
-
-        .info {
-            background: #f1f6f8;
-            color: #315C72;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            line-height: 1.6;
         }
 
         .hint {
@@ -204,8 +199,27 @@
         @endif
 
         @php
-            preg_match('/^(JSS[123]|SS[123])/', $schoolClass->name, $matches);
-            $currentGrade = $matches[1] ?? '';
+            $currentName = $schoolClass->name;
+
+            $grades = [
+                'Pry 1', 'Pry 2', 'Pry 3', 'Pry 4', 'Pry 5', 'Pry 6',
+                'JSS1', 'JSS2', 'JSS3',
+                'SS1', 'SS2', 'SS3',
+                'Ibtidaaiyah', 'Idaadiyah', 'Thanawiyah',
+            ];
+
+            $currentGrade = $currentName;
+
+            foreach (['Science', 'Arts', 'Commercial'] as $departmentName) {
+                if (str_ends_with($currentName, ' ' . $departmentName)) {
+                    $currentGrade = substr(
+                        $currentName,
+                        0,
+                        -strlen(' ' . $departmentName)
+                    );
+                    break;
+                }
+            }
         @endphp
 
         <form action="{{ route('cbt.admin.classes.update', $schoolClass) }}"
@@ -222,12 +236,41 @@
                 <select id="grade" name="grade" required>
                     <option value="">Select class level</option>
 
-                    @foreach (['JSS1', 'JSS2', 'JSS3', 'SS1', 'SS2', 'SS3'] as $grade)
-                        <option value="{{ $grade }}"
-                            {{ old('grade', $currentGrade) === $grade ? 'selected' : '' }}>
-                            {{ $grade }}
-                        </option>
-                    @endforeach
+                    <optgroup label="Primary">
+                        @foreach (['Pry 1', 'Pry 2', 'Pry 3', 'Pry 4', 'Pry 5', 'Pry 6'] as $grade)
+                            <option value="{{ $grade }}"
+                                {{ old('grade', $currentGrade) === $grade ? 'selected' : '' }}>
+                                {{ $grade }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+
+                    <optgroup label="Junior Secondary">
+                        @foreach (['JSS1', 'JSS2', 'JSS3'] as $grade)
+                            <option value="{{ $grade }}"
+                                {{ old('grade', $currentGrade) === $grade ? 'selected' : '' }}>
+                                {{ $grade }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+
+                    <optgroup label="Senior Secondary">
+                        @foreach (['SS1', 'SS2', 'SS3'] as $grade)
+                            <option value="{{ $grade }}"
+                                {{ old('grade', $currentGrade) === $grade ? 'selected' : '' }}>
+                                {{ $grade }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+
+                    <optgroup label="Islamic Studies">
+                        @foreach (['Ibtidaaiyah', 'Idaadiyah', 'Thanawiyah'] as $grade)
+                            <option value="{{ $grade }}"
+                                {{ old('grade', $currentGrade) === $grade ? 'selected' : '' }}>
+                                {{ $grade }}
+                            </option>
+                        @endforeach
+                    </optgroup>
                 </select>
 
                 @error('grade')

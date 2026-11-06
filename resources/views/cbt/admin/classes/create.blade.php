@@ -133,6 +133,11 @@
             box-shadow: 0 0 0 3px rgba(49, 92, 114, .1);
         }
 
+        select optgroup {
+            color: #173B4D;
+            font-weight: 700;
+        }
+
         .hint {
             display: block;
             margin-top: 7px;
@@ -273,18 +278,45 @@
                     <select id="grade" name="grade" required>
                         <option value="">Select class level</option>
 
-                        @foreach(['JSS1', 'JSS2', 'JSS3', 'SS1', 'SS2', 'SS3'] as $grade)
-                            <option
-                                value="{{ $grade }}"
-                                {{ old('grade') == $grade ? 'selected' : '' }}
-                            >
-                                {{ $grade }}
-                            </option>
-                        @endforeach
+                        <optgroup label="Primary">
+                            @foreach(['Pry 1', 'Pry 2', 'Pry 3', 'Pry 4', 'Pry 5', 'Pry 6'] as $grade)
+                                <option value="{{ $grade }}"
+                                    {{ old('grade') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+
+                        <optgroup label="Junior Secondary">
+                            @foreach(['JSS1', 'JSS2', 'JSS3'] as $grade)
+                                <option value="{{ $grade }}"
+                                    {{ old('grade') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+
+                        <optgroup label="Senior Secondary">
+                            @foreach(['SS1', 'SS2', 'SS3'] as $grade)
+                                <option value="{{ $grade }}"
+                                    {{ old('grade') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+
+                        <optgroup label="Islamic Studies">
+                            @foreach(['Ibtidaaiyah', 'Idaadiyah', 'Thanawiyah'] as $grade)
+                                <option value="{{ $grade }}"
+                                    {{ old('grade') == $grade ? 'selected' : '' }}>
+                                    {{ $grade }}
+                                </option>
+                            @endforeach
+                        </optgroup>
                     </select>
 
                     <small class="hint">
-                        Select JSS1–JSS3 or SS1–SS3.
+                        Select the appropriate class from the available categories.
                     </small>
 
                     @error('grade')
