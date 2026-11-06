@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result PIN Management | Abuhaneefa Islamic Academy</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -12,6 +13,10 @@
             --blue: #315C72;
             --gold: #D6A84F;
             --light: #F3F7F8;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -42,13 +47,51 @@
         .content-card {
             border: none;
             border-radius: 12px;
-            box-shadow: 0 3px 15px rgba(0,0,0,.05);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, .05);
         }
 
-        .table thead th {
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .result-pin-table {
+            min-width: 1100px;
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .result-pin-table thead th {
             background: #eaf0f2;
             color: var(--navy);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 16px 12px;
             white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .result-pin-table tbody td {
+            padding: 16px 12px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .result-pin-table tbody tr:hover {
+            background: #f8fbfc;
+        }
+
+        .result-pin-table td:nth-child(2) {
+            min-width: 190px;
+            white-space: normal;
+        }
+
+        .result-pin-table td:nth-child(4) {
+            min-width: 180px;
+            white-space: normal;
         }
 
         .status-active {
@@ -65,83 +108,131 @@
             background: #e2e3e5;
             color: #41464b;
         }
+
+        .pin-number {
+            letter-spacing: 2px;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 576px) {
+            .page-header {
+                padding: 20px;
+            }
+
+            .page-header h3 {
+                font-size: 21px;
+            }
+
+            .content-card .card-body {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container py-4">
 
+    <!-- Page Header -->
     <div class="page-header mb-4">
         <h3 class="fw-bold mb-2">Abuhaneefa Islamic Academy</h3>
         <p class="mb-1">CBT Management System</p>
+
         <h5 class="mt-3 mb-0">Result PIN Management</h5>
-        <small>Manage student result access PINs and payment records.</small>
+
+        <small>
+            Manage student result access PINs and payment records.
+        </small>
     </div>
 
+    <!-- Success Message -->
     @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-@if(session('issued_pin'))
-    <div class="alert alert-warning border border-warning p-4">
-        <h5 class="fw-bold">New Result PIN Issued</h5>
+    <!-- Newly Issued PIN -->
+    @if(session('issued_pin'))
+        <div class="alert alert-warning border border-warning p-4">
 
-        <p class="mb-2">
-            Student: <strong>{{ session('issued_student') }}</strong>
-        </p>
+            <h5 class="fw-bold">New Result PIN Issued</h5>
 
-        <p class="mb-2">Generated Result PIN:</p>
+            <p class="mb-2">
+                Student:
+                <strong>{{ session('issued_student') }}</strong>
+            </p>
 
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-            <h3 class="fw-bold mb-0 text-dark">
-                {{ session('issued_pin') }}
-            </h3>
+            <p class="mb-2">Generated Result PIN:</p>
 
-            <button type="button"
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                <h3 class="fw-bold mb-0 text-dark pin-number">
+                    {{ session('issued_pin') }}
+                </h3>
+
+                <button
+                    type="button"
                     class="btn btn-sm btn-dark"
                     onclick="navigator.clipboard.writeText('{{ session('issued_pin') }}').then(() => alert('PIN copied successfully.'))">
-                Copy PIN
-            </button>
+                    Copy PIN
+                </button>
+
+            </div>
+
+            <hr>
+
+            <strong>Important:</strong>
+            Copy this PIN and provide it securely to the student.
+            It will not be displayed again.
+
         </div>
+    @endif
 
-        <hr>
-
-        <strong>Important:</strong>
-        Copy this PIN and provide it securely to the student.
-        It will not be displayed again.
-    </div>
-@endif
-
+    <!-- Error Message -->
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
 
+    <!-- Page Actions -->
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
         <div>
             <h4 class="fw-bold mb-1">Issued Result PINs</h4>
-            <p class="text-muted mb-0">View and manage student result access.</p>
+
+            <p class="text-muted mb-0">
+                View and manage student result access.
+            </p>
         </div>
 
-        <div class="d-flex gap-2">
-            <a href="{{ route('cbt.admin.dashboard') }}" class="btn btn-outline-secondary">
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a href="{{ route('cbt.admin.dashboard') }}"
+               class="btn btn-outline-secondary">
                 Back to Dashboard
             </a>
 
-            <a href="{{ route('cbt.admin.result-pins.create') }}" class="btn btn-gold">
+            <a href="{{ route('cbt.admin.result-pins.create') }}"
+               class="btn btn-gold">
                 + Issue New PIN
             </a>
+
         </div>
+
     </div>
 
+    <!-- Result PIN Table -->
     <div class="card content-card">
+
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+
+                <table class="table table-hover table-bordered align-middle result-pin-table">
+
                     <thead>
                         <tr>
                             <th>#</th>
@@ -156,14 +247,22 @@
                     </thead>
 
                     <tbody>
+
                         @forelse($resultPins as $pin)
+
                             @php
                                 $student = $pin->student;
+
                                 $studentName = $student
-                                    ? trim($student->first_name . ' ' . ($student->other_names ?? '') . ' ' . $student->last_name)
+                                    ? trim(
+                                        $student->first_name . ' ' .
+                                        ($student->other_names ?? '') . ' ' .
+                                        $student->last_name
+                                    )
                                     : 'Student unavailable';
 
                                 $paymentTotal = $pin->payments->sum('amount_paid');
+
                                 $statusClass = match($pin->status) {
                                     'active' => 'status-active',
                                     'revoked' => 'status-revoked',
@@ -172,22 +271,30 @@
                             @endphp
 
                             <tr>
-                                <td>{{ $resultPins->firstItem() + $loop->index }}</td>
+
+                                <td>
+                                    {{ $resultPins->firstItem() + $loop->index }}
+                                </td>
 
                                 <td>
                                     <strong>{{ $studentName }}</strong>
+
                                     <div class="small text-muted">
                                         {{ $student?->schoolClass?->name ?? 'No class' }}
                                     </div>
                                 </td>
 
-                                <td>{{ $student?->admission_number ?? 'N/A' }}</td>
+                                <td>
+                                    {{ $student?->admission_number ?? 'N/A' }}
+                                </td>
 
                                 <td>
                                     <strong>{{ $pin->start_term }}</strong>
+
                                     <div class="small text-muted">
                                         {{ $pin->start_academic_year }}
                                     </div>
+
                                     <div class="small">
                                         to {{ $pin->end_term }},
                                         {{ $pin->end_academic_year }}
@@ -195,7 +302,10 @@
                                 </td>
 
                                 <td>
-                                    ₦{{ number_format((float) $paymentTotal, 2) }}
+                                    <strong>
+                                        ₦{{ number_format((float) $paymentTotal, 2) }}
+                                    </strong>
+
                                     <div class="small text-muted">
                                         {{ $pin->payments->count() }} payment(s)
                                     </div>
@@ -207,7 +317,9 @@
                                     </span>
                                 </td>
 
-                                <td>{{ $pin->issuer?->name ?? 'N/A' }}</td>
+                                <td>
+                                    {{ $pin->issuer?->name ?? 'N/A' }}
+                                </td>
 
                                 <td>
                                     <a href="{{ route('cbt.admin.result-pins.show', $pin) }}"
@@ -215,28 +327,43 @@
                                         View Details
                                     </a>
                                 </td>
+
                             </tr>
+
                         @empty
+
                             <tr>
                                 <td colspan="8" class="text-center py-5">
-                                    <h6 class="fw-bold">No Result PINs Found</h6>
+
+                                    <h6 class="fw-bold">
+                                        No Result PINs Found
+                                    </h6>
+
                                     <p class="text-muted mb-0">
                                         No result PIN has been issued yet.
                                     </p>
+
                                 </td>
                             </tr>
+
                         @endforelse
+
                     </tbody>
+
                 </table>
+
             </div>
 
+            <!-- Pagination -->
             <div class="mt-3">
                 {{ $resultPins->links() }}
             </div>
 
         </div>
+
     </div>
 
+    <!-- Footer -->
     <div class="text-center text-muted small mt-4">
         &copy; {{ date('Y') }} Abuhaneefa Islamic Academy.
         All rights reserved.
